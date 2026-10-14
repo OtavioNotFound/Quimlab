@@ -1,0 +1,75 @@
+.reaction-classification-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reaction-badges-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.reaction-tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease;
+}
+
+.reaction-tag-item:hover {
+  transform: translateY(-1px);
+}
+
+.badge-rose {
+  background-color: rgba(244, 63, 94, 0.12);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+}
+
+.reaction-definition-box {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.15rem;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.definition-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.definition-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.definition-text {
+  color: var(--text-secondary);
+}
+
+.characteristics-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-color);
+  font-size: 0.825rem;
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.info-icon {
+  flex-shrink: 0;
+}

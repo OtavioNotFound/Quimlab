@@ -1,0 +1,196 @@
+.atom-counter-card {
+  margin-top: 1.5rem;
+}
+
+.atom-counter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.atom-counter-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.atom-counter-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.conservation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.conservation-badge.balanced {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+
+.conservation-badge.unbalanced {
+  background-color: var(--warning-bg);
+  color: var(--warning-text);
+  border: 1px solid var(--warning-border);
+}
+
+.atom-table-container {
+  overflow-x: auto;
+  max-width: 100%;
+  overscroll-behavior-x: contain;
+}
+
+.atom-table-container:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.atom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.atom-table th {
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 600;
+}
+
+.atom-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.element-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.element-symbol {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  min-width: 38px;
+  text-align: center;
+}
+
+.element-name {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.count-cell {
+  min-width: 110px;
+}
+
+.count-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.mini-bar-track {
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.reactants-fill {
+  background: var(--accent-primary);
+}
+
+.products-fill {
+  background: var(--accent-cyan);
+}
+
+.diff-icon {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.icon-equal {
+  color: var(--accent-emerald);
+}
+
+.icon-unequal {
+  color: var(--accent-amber);
+}
+
+.row-unbalanced {
+  background-color: rgba(245, 158, 11, 0.03);
+}
+
+.molar-mass-conservation-bar {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--bg-tertiary);
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-md);
+}
+
+.mass-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.mass-icon {
+  color: var(--accent-primary);
+}
+
+.mass-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.mass-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mass-arrow {
+  color: var(--text-muted);
+  font-weight: 700;
+}

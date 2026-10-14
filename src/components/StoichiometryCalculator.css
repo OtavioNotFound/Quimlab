@@ -1,0 +1,273 @@
+.stoich-card {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background-color: var(--bg-card);
+}
+
+.stoich-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.stoich-title-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.stoich-icon {
+  color: var(--accent-primary);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.stoich-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stoich-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stoich-unbalanced-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  background-color: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  border-radius: var(--radius-md);
+}
+
+.stoich-unbalanced-alert h4 {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.stoich-unbalanced-alert p {
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Tabela Estequiométrica */
+.stoich-table-container {
+  overflow-x: auto;
+}
+
+.stoich-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.stoich-table th {
+  padding: 0.75rem 0.85rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 700;
+}
+
+.stoich-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.stoich-row:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.row-limiting {
+  background-color: rgba(245, 158, 11, 0.06);
+}
+
+.row-excess {
+  background-color: rgba(6, 182, 212, 0.06);
+}
+
+.substance-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.substance-formula-txt {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.substance-desc-txt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.percent-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  padding: 0.15rem 0.35rem;
+  margin-top: 0.25rem;
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  background: var(--accent-glow);
+}
+
+.percent-btn:hover {
+  background-color: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+.stoich-input-group {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  max-width: 130px;
+}
+
+.stoich-input-group:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.stoich-number-input {
+  width: 75px;
+  border: none;
+  background: transparent;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.unit-toggle-btn {
+  background-color: var(--bg-tertiary);
+  border-left: 1px solid var(--border-color);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.unit-toggle-btn:hover {
+  background-color: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+.text-accent {
+  color: var(--accent-primary);
+}
+
+.stoich-explanation-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.15rem;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-primary);
+  font-size: 0.875rem;
+}
+
+/* Composição Centesimal */
+.composition-breakdown-card {
+  margin-top: 0.75rem;
+  padding: 1.25rem;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.breakdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breakdown-header h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.close-link {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.close-link:hover {
+  color: var(--accent-rose);
+}
+
+.breakdown-bars-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.breakdown-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.el-badge {
+  color: var(--text-secondary);
+}
+
+.el-percent {
+  color: var(--accent-primary);
+}
+
+.breakdown-track {
+  height: 8px;
+  background-color: var(--bg-card);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.breakdown-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  border-radius: 4px;
+}

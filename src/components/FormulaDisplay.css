@@ -1,0 +1,52 @@
+.formula-display-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  vertical-align: middle;
+}
+
+.formula-coefficient {
+  font-family: var(--font-mono);
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-right: 0.15em;
+}
+
+.formula-text {
+  font-family: var(--font-mono);
+  font-size: 1.15em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.formula-inline-name {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+.formula-main-line {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.state-arrow-indicator {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.9em;
+  margin-left: 0.15rem;
+  padding: 0 0.15rem;
+  border-radius: 2px;
+}
+
+.state-arrow-indicator.gas {
+  color: var(--accent-cyan);
+}
+
+.state-arrow-indicator.precipitate {
+  color: var(--accent-amber);
+}

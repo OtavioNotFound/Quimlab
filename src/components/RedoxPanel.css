@@ -1,0 +1,179 @@
+.redox-panel-card {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background-color: var(--bg-card);
+}
+
+.redox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.redox-title-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.redox-icon {
+  color: var(--accent-amber);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.redox-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.redox-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.redox-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+}
+
+.redox-status-badge.is-redox {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.redox-status-badge.not-redox {
+  background-color: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.nox-table-container {
+  overflow-x: auto;
+}
+
+.nox-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.nox-table th {
+  padding: 0.75rem 0.85rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 700;
+}
+
+.nox-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.element-symbol-pill {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background-color: var(--bg-tertiary);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  margin-right: 0.5rem;
+}
+
+.delta-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ox-arrow {
+  color: var(--accent-amber);
+}
+
+.red-arrow {
+  color: var(--accent-cyan);
+}
+
+.unchanged-icon {
+  color: var(--text-muted);
+}
+
+.badge-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.agents-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .agents-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.agent-card {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border: 1px solid;
+}
+
+.ox-card {
+  background-color: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.red-card {
+  background-color: rgba(6, 182, 212, 0.05);
+  border-color: rgba(6, 182, 212, 0.25);
+}
+
+.agent-role-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.agent-formula {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.agent-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.redox-explanation-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-md);
+}
