@@ -59,8 +59,9 @@ const CHALLENGES: ChallengeItem[] = [
 export const ChallengesPage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [completedChallenges, setCompletedChallenges] = useState<Set<number>>(() => new Set());
   const [showTip, setShowTip] = useState(false);
-  const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
+  const [feedback, setFeedback] = useState<'success' | 'already-scored' | 'error' | null>(null);
 
   const challenge = CHALLENGES[currentIndex];
   const parsed = parseEquation(challenge.equation);
@@ -90,8 +91,13 @@ export const ChallengesPage: React.FC = () => {
       pExpected.every((v, i) => v === coeffs.products[i]);
 
     if (isCorrect) {
-      setFeedback('success');
-      setScore(s => s + 10);
+      const alreadyCompleted = completedChallenges.has(challenge.id);
+      setFeedback(alreadyCompleted ? 'already-scored' : 'success');
+
+      if (!alreadyCompleted) {
+        setCompletedChallenges(prev => new Set(prev).add(challenge.id));
+        setScore(total => total + 10);
+      }
     } else {
       setFeedback('error');
     }
@@ -187,6 +193,16 @@ export const ChallengesPage: React.FC = () => {
             <div>
               <strong>Excelente! Equação balanceada com perfeição! (+10 pts)</strong>
               <p>{challenge.explanation}</p>
+            </div>
+          </div>
+        )}
+
+        {feedback === 'already-scored' && (
+          <div className="feedback-banner success">
+            <CheckCircle2 size={20} />
+            <div>
+              <strong>Resposta correta.</strong>
+              <p>Este desafio já pontuou nesta sessão; conferir novamente não altera sua pontuação.</p>
             </div>
           </div>
         )}
