@@ -2,6 +2,14 @@
   margin-top: 1.5rem;
 }
 
+.atom-counter-card.card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .atom-counter-header {
   display: flex;
   align-items: center;
@@ -12,7 +20,8 @@
 }
 
 .atom-counter-title {
-  font-size: 1.15rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
   font-weight: 600;
 }
 
@@ -25,22 +34,22 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.85rem;
-  border-radius: var(--radius-full);
+  padding: 0;
+  border-radius: 0;
   font-size: 0.85rem;
   font-weight: 600;
 }
 
 .conservation-badge.balanced {
-  background-color: var(--success-bg);
+  background: transparent;
   color: var(--success-text);
-  border: 1px solid var(--success-border);
+  border: 0;
 }
 
 .conservation-badge.unbalanced {
-  background-color: var(--warning-bg);
+  background: transparent;
   color: var(--warning-text);
-  border: 1px solid var(--warning-border);
+  border: 0;
 }
 
 .atom-table-container {
@@ -58,6 +67,14 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+}
+
+.atom-table .badge {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.8rem;
 }
 
 .atom-table th {
@@ -87,16 +104,14 @@
 }
 
 .element-symbol {
-  font-family: var(--font-mono);
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
   font-weight: 700;
-  background: var(--bg-tertiary);
+  background: transparent;
   color: var(--text-primary);
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  min-width: 38px;
-  text-align: center;
+  padding: 0;
+  min-width: 2rem;
+  text-align: left;
 }
 
 .element-name {
@@ -156,16 +171,15 @@
 
 .molar-mass-conservation-bar {
   margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px dashed var(--border-color);
+  padding: 0.85rem 0 0;
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  background-color: var(--bg-tertiary);
-  padding: 0.85rem 1.15rem;
-  border-radius: var(--radius-md);
+  background: transparent;
+  border-radius: 0;
 }
 
 .mass-block {

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllElements } from '../chemistry/periodicTable';
 import { ElementData } from '../chemistry/types';
-import { Search, Compass, Plus, X } from 'lucide-react';
+import { Search, Plus, X } from 'lucide-react';
 import './PeriodicTablePage.css';
 
 const CATEGORY_COLORS: Record<string, { label: string; bg: string; text: string; border: string }> = {
@@ -45,20 +45,17 @@ export const PeriodicTablePage: React.FC = () => {
 
   return (
     <div className="periodic-page container">
-      {/* Hero */}
-      <section className="periodic-hero">
-        <div className="simulator-badge">
-          <Compass size={14} />
-          <span>IUPAC Padrão Internacional</span>
+      <header className="folio-header">
+        <div>
+          <p className="page-kicker">Elementos</p>
+          <h1 className="periodic-title">Tabela periódica</h1>
         </div>
-        <h1 className="periodic-title">Tabela Periódica dos Elementos</h1>
         <p className="periodic-subtitle">
-          Explore as propriedades atômicas, massas padronizadas, eletronegatividade e estados de oxidação de todos os elementos.
+          Propriedades atômicas, massas padronizadas, eletronegatividade e estados de oxidação. Clique em um elemento para abrir a ficha.
         </p>
-      </section>
+      </header>
 
-      {/* Controles: Busca e Filtro de Famílias */}
-      <div className="periodic-controls card">
+      <div className="periodic-controls">
         <div className="search-box-row">
           <div className="search-input-wrapper">
             <Search size={18} className="search-icon" />
@@ -103,7 +100,7 @@ export const PeriodicTablePage: React.FC = () => {
       </div>
 
       {/* Grade da Tabela Periódica */}
-      <div className="table-scroll-wrapper card">
+      <div className="table-scroll-wrapper">
         <div className="periodic-grid-18">
           {elements.map(el => {
             const cat = CATEGORY_COLORS[el.category] || CATEGORY_COLORS.nonmetal;
@@ -125,7 +122,7 @@ export const PeriodicTablePage: React.FC = () => {
                   backgroundColor: cat.bg,
                   borderColor: isSelected ? 'var(--accent-primary)' : cat.border
                 }}
-                title={`${el.name} (${el.symbol}) — Nº ${el.atomicNumber}`}
+                title={`${el.name} (${el.symbol}), nº ${el.atomicNumber}`}
               >
                 <div className="cell-top">
                   <span className="cell-num">{el.atomicNumber}</span>
@@ -144,7 +141,7 @@ export const PeriodicTablePage: React.FC = () => {
       {/* Detalhes do Elemento Selecionado (Drawer/Modal) */}
       {selectedElement && (
         <div className="element-detail-overlay" onClick={() => setSelectedElement(null)}>
-          <div className="element-detail-modal card" onClick={e => e.stopPropagation()}>
+          <div className="element-detail-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-top">
               <div className="element-badge-large" style={{ borderColor: CATEGORY_COLORS[selectedElement.category]?.border }}>
                 <span className="badge-num">{selectedElement.atomicNumber}</span>

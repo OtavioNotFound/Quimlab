@@ -1,9 +1,11 @@
 .molecular-viewer-card {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  background-color: var(--bg-card);
+  gap: 1rem;
+  background: transparent;
 }
 
 .molecular-header {
@@ -19,18 +21,12 @@
 .molecular-title-box {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.molecular-icon {
-  color: var(--accent-primary);
-  margin-top: 0.2rem;
-  flex-shrink: 0;
 }
 
 .molecular-title {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -39,77 +35,50 @@
   color: var(--text-muted);
 }
 
-.conservation-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-full);
-  font-size: 0.8rem;
+.molecular-status {
+  font-size: 0.82rem;
   font-weight: 600;
 }
 
-.conservation-pill.balanced {
-  background-color: var(--success-bg);
+.molecular-status.balanced {
   color: var(--success-text);
-  border: 1px solid var(--success-border);
 }
 
-.conservation-pill.unbalanced {
-  background-color: var(--warning-bg);
+.molecular-status.unbalanced {
   color: var(--warning-text);
-  border: 1px solid var(--warning-border);
 }
 
 /* Legenda CPK */
 .cpk-legend-bar {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
-  background-color: var(--bg-tertiary);
-  padding: 0.65rem 1rem;
-  border-radius: var(--radius-md);
+  padding: 0.25rem 0;
   font-size: 0.8rem;
 }
 
 .legend-label {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.725rem;
+  font-size: 0.78rem;
 }
 
-.legend-items {
+.cpk-legend-item {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  flex-wrap: wrap;
-}
-
-.cpk-legend-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  background-color: var(--bg-card);
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-color);
+  gap: 0.3rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
 }
 
 .legend-sphere {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   display: inline-block;
   border: 1px solid;
-  box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.35), inset 1px 1px 2px rgba(255, 255, 255, 0.6);
-}
-
-.legend-element-name {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  box-shadow: none;
 }
 
 /* Palco de Trabalho */
@@ -133,23 +102,27 @@
 .stage-side {
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  border: 1px solid var(--border-color);
-  gap: 1rem;
+  padding: 0.35rem 0;
+  gap: 0.75rem;
+}
+
+.stage-side:first-child {
+  padding-right: 1rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.stage-side:last-child {
+  padding-left: 1rem;
 }
 
 .stage-side-header {
-  border-bottom: 1px dashed var(--border-color);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .side-heading {
   font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 600;
   color: var(--text-secondary);
 }
 
@@ -186,21 +159,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-card);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  padding: 0.25rem;
   position: relative;
-  min-height: 60px;
-  min-width: 60px;
-  transition: transform 0.2s ease;
-}
-
-.single-molecule-cluster:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent-primary);
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* Esfera 3D do Átomo */
@@ -218,9 +180,8 @@
   margin: -4px;
   position: relative;
   box-shadow:
-    inset -4px -4px 8px rgba(0, 0, 0, 0.4),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.7),
-    0 4px 6px rgba(0, 0, 0, 0.15);
+    inset -2px -2px 4px rgba(0, 0, 0, 0.24),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.38);
   cursor: pointer;
   transition: transform 0.15s ease;
   user-select: none;
@@ -232,7 +193,7 @@
 }
 
 .atom-label {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  filter: none;
 }
 
 .stage-arrow-box {
@@ -257,8 +218,8 @@
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
-  border-top: 1px dashed var(--border-color);
-  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.65rem;
   font-size: 0.75rem;
 }
 
@@ -268,9 +229,17 @@
 }
 
 .element-count-pill {
-  background-color: var(--bg-card);
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
   font-family: var(--font-mono);
+}
+
+@media (max-width: 860px) {
+  .stage-side:first-child {
+    padding: 0 0 0.85rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .stage-side:last-child {
+    padding: 0.85rem 0 0;
+  }
 }

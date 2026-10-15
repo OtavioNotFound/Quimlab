@@ -78,8 +78,21 @@ export function isFavorite(equation: string): boolean {
 export function getLocalFavorites(): FavoriteItem[] {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsed: unknown = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed.filter(isFavoriteItem) : [];
   } catch {
     return [];
   }
+}
+
+function isFavoriteItem(item: unknown): item is FavoriteItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const record = item as Record<string, unknown>;
+  return typeof record.id === 'string'
+    && typeof record.equation === 'string'
+    && (record.name === undefined || typeof record.name === 'string')
+    && typeof record.timestamp === 'number'
+    && Number.isFinite(record.timestamp);
 }

@@ -1,9 +1,11 @@
 .stoich-card {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  background-color: var(--bg-card);
+  background: transparent;
 }
 
 .stoich-header {
@@ -19,18 +21,12 @@
 .stoich-title-box {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.stoich-icon {
-  color: var(--accent-primary);
-  margin-top: 0.2rem;
-  flex-shrink: 0;
 }
 
 .stoich-title {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -43,11 +39,10 @@
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
-  padding: 1.25rem;
-  background-color: var(--warning-bg);
-  border: 1px solid var(--warning-border);
+  padding: 0.9rem 0;
+  background-color: transparent;
+  border-top: 1px solid var(--warning-border);
   color: var(--warning-text);
-  border-radius: var(--radius-md);
 }
 
 .stoich-unbalanced-alert h4 {
@@ -132,7 +127,7 @@
   padding: 0.15rem 0.35rem;
   margin-top: 0.25rem;
   width: fit-content;
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
   background: var(--accent-glow);
 }
 
@@ -144,10 +139,8 @@
 .stoich-input-group {
   display: inline-flex;
   align-items: center;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-strong);
   max-width: 130px;
 }
 
@@ -190,21 +183,16 @@
 .stoich-explanation-box {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.15rem;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
-  border-left: 3px solid var(--accent-primary);
+  padding: 0.85rem 0 0;
+  border-top: 1px solid var(--border-color);
   font-size: 0.875rem;
 }
 
 /* Composição Centesimal */
 .composition-breakdown-card {
   margin-top: 0.75rem;
-  padding: 1.25rem;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
-  border: 1px dashed var(--border-color);
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -259,15 +247,12 @@
 }
 
 .breakdown-track {
-  height: 8px;
-  background-color: var(--bg-card);
-  border-radius: 4px;
+  height: 6px;
+  background-color: var(--bg-tertiary);
   overflow: hidden;
-  border: 1px solid var(--border-color);
 }
 
 .breakdown-fill {
   height: 100%;
-  background: linear-gradient(90deg, #2563eb, #06b6d4);
-  border-radius: 4px;
+  background: var(--accent-primary);
 }

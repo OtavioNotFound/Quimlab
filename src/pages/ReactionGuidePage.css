@@ -1,156 +1,173 @@
 .reaction-guide-page {
-  padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-top: 1.6rem;
+  padding-bottom: 4.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
-}
-
-.guide-hero {
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto 0.5rem auto;
+  gap: 1.6rem;
 }
 
 .guide-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  margin-top: 0.65rem;
-  margin-bottom: 0.65rem;
+  margin-top: 0.25rem;
 }
 
 .guide-subtitle {
-  font-size: 1.05rem;
+  margin: 0;
+}
+
+.guide-lead {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.85fr) minmax(0, 1.15fr);
+  gap: 1.5rem 2.5rem;
+  padding: 1.4rem 0 1.6rem;
+  border-top: 2px solid var(--border-strong);
+  border-bottom: 2px solid var(--border-strong);
+  background: var(--bg-secondary);
+}
+
+.guide-lead-formula {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 1.15;
+  color: var(--accent-primary);
+  align-self: center;
+}
+
+.guide-lead-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.guide-lead-copy h2 {
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.guide-lead-copy p {
+  max-width: 58ch;
   color: var(--text-secondary);
 }
 
-.guide-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 1.5rem;
+.guide-lead-example {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.85rem;
+  align-items: baseline;
+}
+
+.guide-lead-example span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.guide-lead-example code {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.guide-index {
+  display: flex;
+  flex-direction: column;
 }
 
 .guide-item-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.25fr);
+  grid-template-areas:
+    "head definition"
+    "formula example"
+    "action application";
+  gap: 0.45rem 2rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .guide-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.guide-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.color-blue {
-  background: rgba(37, 99, 235, 0.12);
-  color: #3b82f6;
-  border: 1px solid rgba(37, 99, 235, 0.25);
-}
-
-.color-purple {
-  background: rgba(139, 92, 246, 0.12);
-  color: #8b5cf6;
-  border: 1px solid rgba(139, 92, 246, 0.25);
-}
-
-.color-amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.25);
-}
-
-.color-cyan {
-  background: rgba(6, 182, 212, 0.12);
-  color: #06b6d4;
-  border: 1px solid rgba(6, 182, 212, 0.25);
-}
-
-.color-rose {
-  background: rgba(244, 63, 94, 0.12);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.25);
-}
-
-.color-emerald {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-}
-
-.guide-header-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  grid-area: head;
 }
 
 .guide-card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.2;
 }
 
 .guide-general-formula {
+  grid-area: formula;
   font-family: var(--font-mono);
-  font-size: 0.825rem;
+  font-size: 0.9rem;
   color: var(--accent-primary);
-  font-weight: 600;
 }
 
 .guide-definition {
-  font-size: 0.925rem;
+  grid-area: definition;
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .guide-example-box {
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
-  padding: 0.85rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  border: 1px solid var(--border-color);
+  grid-area: example;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: baseline;
+  gap: 0.3rem 0.9rem;
 }
 
 .example-label {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--text-muted);
-  font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .example-equation {
   font-family: var(--font-mono);
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .example-explanation {
+  grid-column: 1 / -1;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .guide-application-box {
+  grid-area: application;
   font-size: 0.85rem;
   color: var(--text-secondary);
-  border-left: 2px solid var(--accent-primary);
-  padding-left: 0.65rem;
 }
 
 .test-lab-btn {
-  margin-top: auto;
-  width: 100%;
+  grid-area: action;
+  justify-self: start;
+}
+
+@media (max-width: 760px) {
+  .guide-lead-formula {
+    font-size: 1.8rem;
+  }
+
+  .guide-lead,
+  .guide-item-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guide-item-card {
+    grid-template-areas:
+      "head"
+      "formula"
+      "definition"
+      "example"
+      "application"
+      "action";
+    gap: 0.45rem;
+  }
+
+  .guide-example-box {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

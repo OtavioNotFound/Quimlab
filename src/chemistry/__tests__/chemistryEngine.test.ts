@@ -119,6 +119,16 @@ describe('QuimLab Chemical Engine', () => {
       expect(result.success).toBe(false);
       expect(result.error).toContain('violação da conservação da matéria');
     });
+
+    it('deve preservar a carga positiva ao separar participantes', () => {
+      const equation = parseEquation('Fe^3+ + 3 OH^- -> Fe(OH)3');
+      expect(equation.isValid).toBe(true);
+      expect(equation.reactants.map(participant => participant.parsed.charge)).toEqual([3, -1]);
+
+      const result = balanceEquation(equation);
+      expect(result.success).toBe(true);
+      expect(result.isConserved).toBe(true);
+    });
   });
 
   describe('Reaction Classifier', () => {

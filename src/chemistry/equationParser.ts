@@ -169,12 +169,10 @@ function splitPlusSigns(str: string): string[] {
     } else if (ch === '+' && inParen === 0) {
       // Checa se é carga no final de uma fórmula (ex: Na+ ou Fe2+) sem espaço posterior
       const prevChar = i > 0 ? str[i - 1] : '';
-      const nextChar = i < str.length - 1 ? str[i + 1] : '';
 
-      // Se '+' estiver cercado por espaço ou no início/fim, é operador de soma
-      const isSurroundedByWhitespace = /\s/.test(prevChar) || /\s/.test(nextChar);
-      // Se o anterior for dígito ou letra mas seguido de espaço, ou se houver espaço antes
-      if (isSurroundedByWhitespace || i === 0 || i === str.length - 1) {
+      // O sinal de carga positiva pode ser seguido por espaço antes do operador real.
+      const isSeparator = /\s/.test(prevChar) || i === 0 || i === str.length - 1;
+      if (isSeparator) {
         tokens.push(current);
         current = '';
         continue;

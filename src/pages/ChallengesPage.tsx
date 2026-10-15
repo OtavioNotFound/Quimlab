@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { balanceEquation, parseEquation } from '../chemistry';
-import { Award, CheckCircle2, AlertTriangle, Lightbulb, ArrowRight } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Lightbulb, ArrowRight } from 'lucide-react';
 import './ChallengesPage.css';
 
 interface ChallengeItem {
@@ -118,28 +118,28 @@ export const ChallengesPage: React.FC = () => {
 
   return (
     <div className="challenges-page container">
-      <div className="challenges-hero">
-        <div className="badge badge-warning">
-          <Award size={14} />
-          <span>Exercícios Interativos</span>
+      <header className="folio-header">
+        <div>
+          <p className="page-kicker">Exercícios</p>
+          <h1 className="challenges-title">Desafios de balanceamento</h1>
         </div>
-        <h1 className="challenges-title">Desafios de Balanceamento Químico</h1>
-        <p className="challenges-subtitle">
-          Treine o raciocínio estequiométrico ajustando os coeficientes inteiros e domine a Lei de Conservação da Massa.
-        </p>
-
-        <div className="score-badge-card">
-          <span>Pontuação Total:</span>
-          <strong>{score} pts</strong>
+        <div className="challenges-aside">
+          <p className="challenges-subtitle">
+            Ajuste os coeficientes até a contagem de átomos fechar nos dois lados.
+          </p>
+          <p className="challenge-score">
+            <span>Pontuação desta sessão</span>
+            <strong>{score}</strong>
+          </p>
         </div>
-      </div>
+      </header>
 
-      <div className="challenge-card card">
+      <div className="challenge-sheet">
         <div className="challenge-card-header">
           <div className="challenge-meta">
             <span className="challenge-step">Desafio {currentIndex + 1} de {CHALLENGES.length}</span>
-            <span className={`badge ${challenge.level === 'Iniciante' ? 'badge-success' : challenge.level === 'Intermediário' ? 'badge-primary' : 'badge-purple'}`}>
-              Nível {challenge.level}
+            <span className="challenge-level">
+              {challenge.level}
             </span>
           </div>
           <button onClick={() => setShowTip(!showTip)} className="btn btn-secondary tip-btn">
@@ -150,7 +150,7 @@ export const ChallengesPage: React.FC = () => {
 
         {showTip && (
           <div className="tip-alert-box">
-            <p>💡 <strong>Dica do Professor:</strong> {challenge.tip}</p>
+            <p><strong>Dica:</strong> {challenge.tip}</p>
           </div>
         )}
 

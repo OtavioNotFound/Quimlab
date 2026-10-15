@@ -58,10 +58,24 @@ export async function saveToHistory(
 export function getLocalHistory(): HistoryItem[] {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsed: unknown = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed.filter(isHistoryItem) : [];
   } catch {
     return [];
   }
+}
+
+function isHistoryItem(item: unknown): item is HistoryItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const record = item as Record<string, unknown>;
+  return typeof record.id === 'string'
+    && typeof record.inputEquation === 'string'
+    && typeof record.balancedEquation === 'string'
+    && typeof record.isBalanced === 'boolean'
+    && typeof record.timestamp === 'number'
+    && Number.isFinite(record.timestamp);
 }
 
 export function clearLocalHistory(): void {

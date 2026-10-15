@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ParsedEquation } from '../chemistry/types';
 import { analyzeRedox } from '../chemistry/oxidationStates';
-import { Zap, ArrowUpRight, ArrowDownRight, Minus, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import './RedoxPanel.css';
 
 interface RedoxPanelProps {
@@ -14,31 +14,20 @@ export const RedoxPanel: React.FC<RedoxPanelProps> = ({ equation }) => {
   }, [equation]);
 
   return (
-    <div className="redox-panel-card card">
+    <section className="redox-panel-card">
       <div className="redox-header">
         <div className="redox-title-box">
-          <Zap size={22} className="redox-icon" />
           <div>
-            <h3 className="redox-title">Estados de Oxidação (Nox) & Análise Redox</h3>
+            <h3 className="redox-title">Números de oxidação</h3>
             <p className="redox-subtitle">
-              Acompanhamento de transferência de elétrons, semi-reações e agentes oxidante e redutor.
+              Variação do Nox e transferência de elétrons.
             </p>
           </div>
         </div>
 
-        <div className={`redox-status-badge ${redoxResult.isRedox ? 'is-redox' : 'not-redox'}`}>
-          {redoxResult.isRedox ? (
-            <>
-              <Zap size={15} />
-              <span>Reação de Oxirredução (Redox)</span>
-            </>
-          ) : (
-            <>
-              <ShieldCheck size={15} />
-              <span>Sem Transferência de Elétrons</span>
-            </>
-          )}
-        </div>
+        <span className={`redox-status ${redoxResult.isRedox ? 'is-redox' : 'not-redox'}`}>
+          {redoxResult.isRedox ? 'Oxirredução' : 'Sem oxirredução'}
+        </span>
       </div>
 
       {/* Tabela de Variação de Nox por Elemento */}
@@ -112,17 +101,17 @@ export const RedoxPanel: React.FC<RedoxPanelProps> = ({ equation }) => {
       {/* Explicação Didática dos Agentes */}
       <div className="redox-agents-summary">
         {redoxResult.isRedox ? (
-          <div className="agents-cards-grid">
-            <div className="agent-card ox-card">
-              <span className="agent-role-title">Agente Redutor (Provocou a redução do outro)</span>
+          <div className="agents-list">
+            <div className="agent-row">
+              <span className="agent-role-title">Agente redutor <span>(sofre oxidação)</span></span>
               <span className="agent-formula font-mono">{redoxResult.reducingAgent}</span>
               <p className="agent-desc">
                 Contém o elemento <strong>{redoxResult.oxidizedElement}</strong>, que doou elétrons e teve seu Nox aumentado.
               </p>
             </div>
 
-            <div className="agent-card red-card">
-              <span className="agent-role-title">Agente Oxidante (Provocou a oxidação do outro)</span>
+            <div className="agent-row">
+              <span className="agent-role-title">Agente oxidante <span>(sofre redução)</span></span>
               <span className="agent-formula font-mono">{redoxResult.oxidizingAgent}</span>
               <p className="agent-desc">
                 Contém o elemento <strong>{redoxResult.reducedElement}</strong>, que recebeu elétrons e teve seu Nox reduzido.
@@ -133,6 +122,6 @@ export const RedoxPanel: React.FC<RedoxPanelProps> = ({ equation }) => {
           <p className="redox-explanation-text">{redoxResult.explanation}</p>
         )}
       </div>
-    </div>
+    </section>
   );
 };

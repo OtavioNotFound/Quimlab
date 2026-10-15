@@ -36,7 +36,7 @@ Uma plataforma educacional interativa de química desenvolvida para que estudant
   - Filtros por função química: Ácidos, Bases, Sais, Óxidos, Substâncias Simples e Orgânicos.
 - **Persistência de Dados e Histórico:**
   - Histórico de reações e favoritos armazenados em `localStorage` (offline-first).
-  - Suporte completo a **Supabase** (PostgreSQL com Row Level Security) para sincronização em nuvem e autenticação.
+  - Integração opcional com **Supabase** (PostgreSQL com Row Level Security) para enviar registros quando já existe uma sessão autenticada. O app não inclui fluxo de login nem carrega dados da nuvem.
 - **Interface Moderna e Responsiva:**
   - Suporte completo a tema Claro (Light) e Escuro (Dark).
   - Tipografia científica legível e design limpo com ícones Lucide.
@@ -59,7 +59,7 @@ src/
 │   ├── reactionClassifier.ts # Classificador com regras didáticas
 │   ├── solubility.ts      # Regras de solubilidade aquosa e série de reatividade
 │   ├── presetReactions.ts # Reações didáticas pré-cadastradas
-│   └── __tests__/         # 28 testes unitários automatizados com Vitest
+│   └── __tests__/         # Testes unitários automatizados com Vitest
 ├── components/            # CAMADA 2: INTERFACE VISUAL (React 19 + TypeScript + CSS)
 │   ├── Navbar.tsx
 │   ├── VisualEquationBuilder.tsx
@@ -115,7 +115,7 @@ npm run build
 
 ## 🗄️ Configuração do Banco de Dados Supabase (Opcional)
 
-Por padrão, o QuimLab funciona **100% offline no navegador** utilizando `localStorage`. Para ativar o salvamento multi-dispositivo na nuvem:
+Por padrão, o QuimLab funciona **100% offline no navegador** utilizando `localStorage`. Para habilitar o envio de registros ao Supabase:
 
 1. Crie um projeto gratuito em [supabase.com](https://supabase.com).
 2. No painel SQL do Supabase, execute o script de migração:
@@ -125,4 +125,4 @@ Por padrão, o QuimLab funciona **100% offline no navegador** utilizando `localS
    VITE_SUPABASE_URL=https://seu-projeto.supabase.co
    VITE_SUPABASE_ANON_KEY=sua-chave-anon-publica
    ```
-4. Reinicie o servidor com `npm run dev`. O aplicativo sincronizará automaticamente o histórico e favoritos com o Supabase quando houver usuário autenticado!
+4. Reinicie o servidor com `npm run dev`. O app enviará novos registros e alterações de favoritos ao Supabase quando já houver uma sessão autenticada. O login e o carregamento de dados da nuvem não estão implementados no app.

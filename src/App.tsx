@@ -1,7 +1,6 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense, useState, useLayoutEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { FlaskConical } from 'lucide-react';
 import './styles/global.css';
 import './App.css';
 
@@ -14,10 +13,10 @@ const PeriodicTablePage = lazy(() => import('./pages/PeriodicTablePage').then(pa
 export const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('quimlab-theme');
-    return (saved as 'light' | 'dark') || 'dark';
+    return saved === 'dark' || saved === 'light' ? saved : 'light';
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('quimlab-theme', theme);
   }, [theme]);
@@ -29,31 +28,45 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <div className="app-layout">
+        <a className="skip-link" href="#main-content">Pular para o conteúdo principal</a>
         <Navbar theme={theme} onToggleTheme={toggleTheme} />
 
-        <main className="main-content">
-          <Suspense fallback={<div className="route-loading" role="status">Carregando...</div>}>
+        <main id="main-content" className="main-content" tabIndex={-1}>
+          <Suspense fallback={<div className="route-loading" role="status">Carregando o laboratório...</div>}>
             <Routes>
               <Route path="/" element={<SimulatorPage />} />
               <Route path="/periodic-table" element={<PeriodicTablePage />} />
               <Route path="/substances" element={<SubstanceCatalogPage />} />
               <Route path="/reactions" element={<ReactionGuidePage />} />
               <Route path="/challenges" element={<ChallengesPage />} />
+              <Route
+                path="*"
+                element={(
+                  <section className="not-found container" aria-labelledby="not-found-title">
+                    <span className="not-found-code">404</span>
+                    <h1 id="not-found-title">Esta página não existe</h1>
+                    <p>O endereço pode ter mudado ou não fazer parte do QuimLab.</p>
+                    <Link className="btn btn-primary" to="/">Voltar ao laboratório</Link>
+                  </section>
+                )}
+              />
             </Routes>
           </Suspense>
         </main>
 
         <footer className="app-footer">
           <div className="container footer-container">
-            <div className="footer-left">
-              <FlaskConical size={18} className="footer-icon" />
-              <span>
-                <strong>QuimLab</strong> — Simulador Interativo & Didático de Reações Químicas
-              </span>
+            <div className="footer-brand">
+              <strong>QuimLab</strong>
+              <span>Laboratório escolar de reações químicas</span>
             </div>
-            <div className="footer-right">
-              <span>Desenvolvido com precisão matemática e científica</span>
-            </div>
+            <nav className="footer-nav" aria-label="Rodapé">
+              <Link to="/">Laboratório</Link>
+              <Link to="/periodic-table">Tabela periódica</Link>
+              <Link to="/substances">Substâncias</Link>
+              <Link to="/reactions">Tipos de reação</Link>
+              <Link to="/challenges">Desafios</Link>
+            </nav>
           </div>
         </footer>
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { ParsedEquation } from '../chemistry/types';
 import { calculateStoichiometry, calculateMassPercentages } from '../chemistry/stoichiometry';
 import { formatFormulaDisplay } from '../chemistry/formulaParser';
-import { Scale, AlertCircle, PieChart, Info, RefreshCw } from 'lucide-react';
+import { AlertCircle, PieChart, RefreshCw } from 'lucide-react';
 import './StoichiometryCalculator.css';
 
 interface StoichiometryCalculatorProps {
@@ -59,7 +59,7 @@ export const StoichiometryCalculator: React.FC<StoichiometryCalculatorProps> = (
 
   if (!isBalanced) {
     return (
-      <div className="stoich-card card">
+      <section className="stoich-card">
         <div className="stoich-unbalanced-alert">
           <AlertCircle size={22} className="alert-icon" />
           <div>
@@ -70,7 +70,7 @@ export const StoichiometryCalculator: React.FC<StoichiometryCalculatorProps> = (
             </p>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -86,14 +86,13 @@ export const StoichiometryCalculator: React.FC<StoichiometryCalculatorProps> = (
     : null;
 
   return (
-    <div className="stoich-card card">
+    <section className="stoich-card">
       <div className="stoich-header">
         <div className="stoich-title-box">
-          <Scale size={22} className="stoich-icon" />
           <div>
-            <h3 className="stoich-title">Calculadora Estequiométrica & Rendimento</h3>
+            <h3 className="stoich-title">Estequiometria</h3>
             <p className="stoich-subtitle">
-              Insira a massa (g) ou mols (mol) de qualquer reagente para prever o consumo, reagente limitante e produtos formados.
+              Informe massa (g) ou quantidade (mol) de um reagente para estimar consumo, reagente limitante e produtos.
             </p>
           </div>
         </div>
@@ -213,7 +212,6 @@ export const StoichiometryCalculator: React.FC<StoichiometryCalculatorProps> = (
 
       {/* Explicação da Estequiometria */}
       <div className="stoich-explanation-box">
-        <Info size={18} className="info-icon" />
         <p className="explanation-text">{stoichResult.explanation}</p>
       </div>
 
@@ -249,6 +247,6 @@ export const StoichiometryCalculator: React.FC<StoichiometryCalculatorProps> = (
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };

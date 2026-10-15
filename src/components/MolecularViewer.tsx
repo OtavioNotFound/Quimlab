@@ -2,7 +2,7 @@ import React from 'react';
 import { SubstanceParticipant } from '../chemistry/types';
 import { getElement } from '../chemistry/periodicTable';
 import { formatFormulaDisplay } from '../chemistry/formulaParser';
-import { CheckCircle2, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import './MolecularViewer.css';
 
 /**
@@ -63,58 +63,47 @@ export const MolecularViewer: React.FC<MolecularViewerProps> = ({
   const allElements = Array.from(new Set([...Object.keys(reactantSummary), ...Object.keys(productSummary)])).sort();
 
   return (
-    <div className="molecular-viewer-card card">
+    <section className="molecular-viewer-card">
       <div className="molecular-header">
         <div className="molecular-title-box">
-          <Sparkles size={20} className="molecular-icon" />
           <div>
-            <h3 className="molecular-title">Modelo Molecular Submicroscópico (Esferas CPK)</h3>
+            <h3 className="molecular-title">Modelo molecular</h3>
             <p className="molecular-subtitle">
-              Visualização didática de moléculas e átomos. Nenhum átomo é criado ou destruído durante a reação química.
+              Cada esfera representa um átomo; as cores seguem o padrão CPK.
             </p>
           </div>
         </div>
 
-        <div className={`conservation-pill ${isBalanced ? 'balanced' : 'unbalanced'}`}>
-          {isBalanced ? (
-            <>
-              <CheckCircle2 size={16} />
-              <span>Conservação Perfeita de Partículas</span>
-            </>
-          ) : (
-            <span>Equação Desbalanceada</span>
-          )}
-        </div>
+        <span className={`molecular-status ${isBalanced ? 'balanced' : 'unbalanced'}`}>
+          {isBalanced ? 'Equação balanceada' : 'Equação desbalanceada'}
+        </span>
       </div>
 
       {/* Legenda de Cores CPK */}
-      <div className="cpk-legend-bar">
-        <span className="legend-label">Padrão de Cores CPK:</span>
-        <div className="legend-items">
-          {allElements.map(el => {
-            const elData = getElement(el);
-            const color = CPK_COLORS[el] || CPK_COLORS.default;
-            return (
-              <div key={el} className="cpk-legend-chip">
-                <span
-                  className="legend-sphere"
-                  style={{ backgroundColor: color.bg, borderColor: color.border }}
-                />
-                <span className="legend-element-name">
-                  {elData ? elData.name : el} ({el})
-                </span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="cpk-legend-bar" aria-label="Legenda das cores dos elementos">
+        <span className="legend-label">CPK</span>
+        {allElements.map(el => {
+          const elData = getElement(el);
+          const color = CPK_COLORS[el] || CPK_COLORS.default;
+          return (
+            <span key={el} className="cpk-legend-item" title={elData?.name || el}>
+              <span
+                className="legend-sphere"
+                style={{ backgroundColor: color.bg, borderColor: color.border }}
+                aria-hidden="true"
+              />
+              {el}
+            </span>
+          );
+        })}
       </div>
 
       {/* Palco Molecular: Reagentes vs Produtos */}
       <div className="molecular-stage-workbench">
         {/* Lado dos Reagentes */}
-        <div className="stage-side">
+        <section className="stage-side" aria-label="Reagentes">
           <div className="stage-side-header">
-            <span className="side-heading">Reagentes (Antes da Reação)</span>
+            <h4 className="side-heading">Reagentes</h4>
           </div>
 
           <div className="molecules-container">
@@ -165,7 +154,7 @@ export const MolecularViewer: React.FC<MolecularViewerProps> = ({
               </span>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* Divisor de Reação com Seta */}
         <div className="stage-arrow-box">
@@ -174,9 +163,9 @@ export const MolecularViewer: React.FC<MolecularViewerProps> = ({
         </div>
 
         {/* Lado dos Produtos */}
-        <div className="stage-side">
+        <section className="stage-side" aria-label="Produtos">
           <div className="stage-side-header">
-            <span className="side-heading">Produtos (Depois da Reação)</span>
+            <h4 className="side-heading">Produtos</h4>
           </div>
 
           <div className="molecules-container">
@@ -227,8 +216,8 @@ export const MolecularViewer: React.FC<MolecularViewerProps> = ({
               </span>
             ))}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </section>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { SUBSTANCE_CATALOG } from '../chemistry/substanceCatalog';
 import { SubstanceDetailCard } from '../components/SubstanceDetailCard';
-import { Search, BookOpen, Filter } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import './SubstanceCatalogPage.css';
 
 export const SubstanceCatalogPage: React.FC = () => {
@@ -46,22 +46,22 @@ export const SubstanceCatalogPage: React.FC = () => {
 
   return (
     <div className="substance-catalog-page container">
-      <div className="catalog-hero">
-        <div className="badge badge-primary">
-          <BookOpen size={14} />
-          <span>Enciclopédia Química</span>
+      <header className="folio-header">
+        <div>
+          <p className="page-kicker">Índice</p>
+          <h1 className="catalog-title">Catálogo de substâncias</h1>
         </div>
-        <h1 className="catalog-title">Catálogo de Substâncias Químicas</h1>
         <p className="catalog-subtitle">
-          Consulte fórmulas moleculares, nomes oficiais IUPAC, denominações usuais e populares, massas molares e propriedades fundamentais.
+          Fórmulas, nomes IUPAC, denominações usuais, massas molares e a função química de cada entrada.
         </p>
-      </div>
+      </header>
 
-      <div className="catalog-search-bar card">
+      <div className="catalog-search-bar">
         <div className="search-input-group">
           <Search size={20} className="search-icon" />
           <input
             type="text"
+            aria-label="Pesquisar substâncias"
             placeholder="Pesquisar por fórmula (ex: H2O, NaCl), nome (ex: ácido clorídrico) ou nome usual (ex: soda cáustica)..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
@@ -77,6 +77,7 @@ export const SubstanceCatalogPage: React.FC = () => {
                 key={f.id}
                 onClick={() => setSelectedFilter(f.id)}
                 className={`filter-chip ${selectedFilter === f.id ? 'active' : ''}`}
+                aria-pressed={selectedFilter === f.id}
               >
                 {f.label}
               </button>

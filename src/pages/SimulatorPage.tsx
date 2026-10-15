@@ -34,14 +34,10 @@ import {
   FavoriteItem
 } from '../services/favoritesService';
 import {
-  Sparkles,
   Trash2,
   CheckCircle,
-  HelpCircle,
   Sliders,
   ChevronRight,
-  FlaskConical,
-  BookOpen,
   Star,
   History,
   PenTool,
@@ -51,8 +47,6 @@ import {
   Copy,
   Check,
   Scale,
-  Zap,
-  Atom
 } from 'lucide-react';
 import './SimulatorPage.css';
 
@@ -62,7 +56,7 @@ export const SimulatorPage: React.FC = () => {
   const [equationInput, setEquationInput] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
     const eqParam = params.get('eq');
-    return eqParam ? decodeURIComponent(eqParam) : 'H2 + O2 -> H2O';
+    return eqParam || 'H2 + O2 -> H2O';
   });
 
   const [parsedEq, setParsedEq] = useState<ParsedEquation | null>(null);
@@ -247,41 +241,68 @@ export const SimulatorPage: React.FC = () => {
   const currentVisualProducts: ParticipantItem[] = parsedEq?.isValid
     ? parsedEq.products.map(p => ({ formula: p.formula, coefficient: p.coefficient }))
     : [];
+
+  const molecularReactants = parsedEq?.reactants.map((participant, index) => ({
+    ...participant,
+    coefficient: manualMode
+      ? manualCoeffs.reactants[index] ?? participant.coefficient
+      : balanceResult?.success
+        ? balanceResult.reactantsCoefficients?.[index] ?? participant.coefficient
+        : participant.coefficient
+  })) ?? [];
+
+  const molecularProducts = parsedEq?.products.map((participant, index) => ({
+    ...participant,
+    coefficient: manualMode
+      ? manualCoeffs.products[index] ?? participant.coefficient
+      : balanceResult?.success
+        ? balanceResult.productsCoefficients?.[index] ?? participant.coefficient
+        : participant.coefficient
+  })) ?? [];
+
+  const manualBalanceCorrect = Boolean(
+    balanceResult?.success
+    && balanceResult.reactantsCoefficients?.length === manualCoeffs.reactants.length
+    && balanceResult.productsCoefficients?.length === manualCoeffs.products.length
+    && balanceResult.reactantsCoefficients.every((coefficient, index) => coefficient === manualCoeffs.reactants[index])
+    && balanceResult.productsCoefficients.every((coefficient, index) => coefficient === manualCoeffs.products[index])
+  );
+  const molecularBalance = manualMode
+    ? manualBalanceCorrect
+    : Boolean(balanceResult?.success && balanceResult.isConserved);
+  const displayedEquation = parsedEq
+    ? { ...parsedEq, reactants: molecularReactants, products: molecularProducts }
+    : null;
+
   const productPrediction = predictReactionProducts(equationInput);
 
   return (
     <div className="simulator-page container">
-      {/* Hero / Introdução */}
-      <section className="simulator-hero">
-        <div className="simulator-badge">
-          <FlaskConical size={14} />
-          <span>Laboratório Virtual Didático</span>
+      <header className="folio-header">
+        <div>
+          <p className="page-kicker">Laboratório</p>
+          <h1 className="simulator-title">Balancear equação</h1>
         </div>
-        <h1 className="simulator-title">Simulador de Reações Químicas</h1>
         <p className="simulator-subtitle">
-          Monte, interprete, balanceie e compreenda transformações químicas em tempo real com validação científica e visualização molecular.
+          Digite reagentes e produtos para conferir a proporção estequiométrica. O cálculo usa frações exatas, sem arredondamento.
         </p>
-      </section>
+      </header>
 
-      {/* Seletor Rápido de Exemplos / Presets */}
-      <section className="presets-section card">
-        <div className="presets-header">
-          <BookOpen size={18} className="preset-icon" />
-          <span className="presets-label">Exemplos Clássicos para Explorar:</span>
-        </div>
-        <div className="presets-scroll">
+      <div className="preset-picker">
+        <label htmlFor="reaction-example">Reação de partida</label>
+        <select
+          id="reaction-example"
+          value={selectedPreset}
+          onChange={event => {
+            const preset = PRESET_REACTIONS.find(item => item.id === event.target.value);
+            if (preset) handleApplyPreset(preset);
+          }}
+        >
           {PRESET_REACTIONS.map(preset => (
-            <button
-              key={preset.id}
-              onClick={() => handleApplyPreset(preset)}
-              className={`preset-chip ${selectedPreset === preset.id ? 'active' : ''}`}
-            >
-              <span className="preset-chip-name">{preset.name}</span>
-              <span className="preset-chip-formula">{preset.unbalanced}</span>
-            </button>
+            <option key={preset.id} value={preset.id}>{preset.name}</option>
           ))}
-        </div>
-      </section>
+        </select>
+      </div>
 
       {/* Montador Visual Opcional */}
       {showVisualBuilder && (
@@ -294,7 +315,7 @@ export const SimulatorPage: React.FC = () => {
       )}
 
       {/* Editor Principal da Equação */}
-      <section className="editor-card card">
+      <section className="editor-card">
         <div className="editor-top-bar">
           <label htmlFor="equation-input" className="editor-label">
             Equação Química:
@@ -330,7 +351,7 @@ export const SimulatorPage: React.FC = () => {
         {/* Mensagem de Erro no Parsing */}
         {parsedEq && !parsedEq.isValid && (
           <div className="parse-error-box">
-            <p className="error-message">⚠️ {parsedEq.error}</p>
+            <p className="error-message">{parsedEq.error}</p>
           </div>
         )}
 
@@ -342,7 +363,7 @@ export const SimulatorPage: React.FC = () => {
             disabled={!parsedEq?.isValid}
             title="Balancear equação automaticamente pelo método algébrico de frações exatas"
           >
-            <Sparkles size={18} />
+            <Scale size={18} />
             <span>Balancear Automaticamente</span>
           </button>
 
@@ -360,7 +381,7 @@ export const SimulatorPage: React.FC = () => {
               className="btn btn-secondary"
               title="Sugere produtos para reações conhecidas; confira se correspondem às condições da reação"
             >
-              <Sparkles size={18} />
+              <ChevronRight size={18} />
               <span>Completar produtos</span>
             </button>
           )}
@@ -530,15 +551,15 @@ export const SimulatorPage: React.FC = () => {
       {parsedEq && parsedEq.isValid && (
         <section className="reaction-display-card card">
           <div className="reaction-display-header">
-            <span className="section-title">Visualização Didática da Reação</span>
-            {balanceResult?.isConserved && (
-              <span className="badge badge-success">Equação Equilibrada</span>
+            <span className="section-title">Figura da reação</span>
+            {molecularBalance && (
+              <span className="badge badge-success">Equação equilibrada</span>
             )}
           </div>
 
           <div className="equation-visual-row">
             <div className="equation-side">
-              {parsedEq.reactants.map((r, i) => (
+              {(displayedEquation?.reactants ?? parsedEq.reactants).map((r, i) => (
                 <React.Fragment key={i}>
                   {i > 0 && <span className="plus-symbol">+</span>}
                   <FormulaDisplay
@@ -555,7 +576,7 @@ export const SimulatorPage: React.FC = () => {
             </div>
 
             <div className="equation-side">
-              {parsedEq.products.map((p, j) => (
+              {(displayedEquation?.products ?? parsedEq.products).map((p, j) => (
                 <React.Fragment key={j}>
                   {j > 0 && <span className="plus-symbol">+</span>}
                   <FormulaDisplay
@@ -589,33 +610,33 @@ export const SimulatorPage: React.FC = () => {
             <button
               onClick={() => setActiveTab('details')}
               className={`tab-nav-btn ${activeTab === 'details' ? 'active' : ''}`}
+              aria-pressed={activeTab === 'details'}
             >
-              <FlaskConical size={18} />
-              <span>Conservação & Substâncias</span>
+              Conservação
             </button>
 
             <button
               onClick={() => setActiveTab('molecules')}
               className={`tab-nav-btn ${activeTab === 'molecules' ? 'active' : ''}`}
+              aria-pressed={activeTab === 'molecules'}
             >
-              <Atom size={18} />
-              <span>Modelo Molecular (CPK)</span>
+              Moléculas
             </button>
 
             <button
               onClick={() => setActiveTab('stoichiometry')}
               className={`tab-nav-btn ${activeTab === 'stoichiometry' ? 'active' : ''}`}
+              aria-pressed={activeTab === 'stoichiometry'}
             >
-              <Scale size={18} />
-              <span>Calculadora Estequiométrica</span>
+              Estequiometria
             </button>
 
             <button
               onClick={() => setActiveTab('redox')}
               className={`tab-nav-btn ${activeTab === 'redox' ? 'active' : ''}`}
+              aria-pressed={activeTab === 'redox'}
             >
-              <Zap size={18} />
-              <span>Estados de Oxidação (Nox & Redox)</span>
+              Redox
             </button>
           </div>
 
@@ -626,19 +647,16 @@ export const SimulatorPage: React.FC = () => {
                 {balanceResult?.atomTable && (
                   <AtomCounterTable
                     table={balanceResult.atomTable}
-                    isBalanced={!!balanceResult.isConserved}
-                    reactants={parsedEq.reactants}
-                    products={parsedEq.products}
-                    reactantCoeffs={manualMode ? manualCoeffs.reactants : balanceResult.reactantsCoefficients}
-                    productCoeffs={manualMode ? manualCoeffs.products : balanceResult.productsCoefficients}
+                    isBalanced={molecularBalance}
+                    reactants={displayedEquation?.reactants ?? parsedEq.reactants}
+                    products={displayedEquation?.products ?? parsedEq.products}
                   />
                 )}
 
                 {classification && balanceResult && (
                   <section className="explanation-section card">
                     <div className="explanation-header">
-                      <HelpCircle size={20} className="explanation-icon" />
-                      <h3>O que acontece nesta reação?</h3>
+                      <h3>O que acontece nesta reação</h3>
                     </div>
                     <p className="explanation-text">{classification.explanation}</p>
                     {balanceResult.explanation && (
@@ -650,7 +668,7 @@ export const SimulatorPage: React.FC = () => {
                 <section className="participants-catalog-section">
                   <h3 className="section-heading">Substâncias Envolvidas na Reação</h3>
                   <div className="substances-grid">
-                    {parsedEq.reactants.map((r, idx) => (
+                    {displayedEquation?.reactants.map((r, idx) => (
                       <SubstanceDetailCard
                         key={`reactant-${idx}`}
                         formula={r.formula}
@@ -660,7 +678,7 @@ export const SimulatorPage: React.FC = () => {
                         coefficient={r.coefficient}
                       />
                     ))}
-                    {parsedEq.products.map((p, idx) => (
+                    {displayedEquation?.products.map((p, idx) => (
                       <SubstanceDetailCard
                         key={`product-${idx}`}
                         formula={p.formula}
@@ -679,9 +697,9 @@ export const SimulatorPage: React.FC = () => {
             {activeTab === 'molecules' && (
               <div className="tab-panel">
                 <MolecularViewer
-                  reactants={parsedEq.reactants}
-                  products={parsedEq.products}
-                  isBalanced={!!balanceResult?.isConserved}
+                  reactants={displayedEquation?.reactants ?? parsedEq.reactants}
+                  products={displayedEquation?.products ?? parsedEq.products}
+                  isBalanced={molecularBalance}
                 />
               </div>
             )}
@@ -690,8 +708,8 @@ export const SimulatorPage: React.FC = () => {
             {activeTab === 'stoichiometry' && (
               <div className="tab-panel">
                 <StoichiometryCalculator
-                  equation={parsedEq}
-                  isBalanced={!!balanceResult?.isConserved}
+                  equation={displayedEquation ?? parsedEq}
+                  isBalanced={molecularBalance}
                 />
               </div>
             )}
@@ -699,7 +717,7 @@ export const SimulatorPage: React.FC = () => {
             {/* ABA 4: NOX & REDOX */}
             {activeTab === 'redox' && (
               <div className="tab-panel">
-                <RedoxPanel equation={parsedEq} />
+                <RedoxPanel equation={displayedEquation ?? parsedEq} />
               </div>
             )}
           </div>
