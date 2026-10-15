@@ -17,19 +17,9 @@ body {
   color: var(--text-primary);
   line-height: 1.55;
   min-height: 100dvh;
-  background-image:
-    linear-gradient(180deg, rgb(27 36 48 / 0.03), transparent 180px);
+
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-grain);
-  pointer-events: none;
-  opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-}
 
 h1, h2, h3, .display-type {
   font-family: var(--font-display);
@@ -97,31 +87,22 @@ code, kbd, samp, pre {
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1392px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2.5rem;
 }
 
-.page-kicker {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent-primary);
-}
 
 .folio-header {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
   gap: 1.5rem 3rem;
-  align-items: end;
-  padding-bottom: 1.25rem;
-  border-bottom: 2px solid var(--border-strong);
+  align-items: center;
+  padding: 1rem 0 1.5rem;
 }
 
 .folio-header h1 {
-  font-size: 3.2rem;
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
   line-height: 1.08;
   padding-bottom: 0.12em;
 }
@@ -129,7 +110,7 @@ code, kbd, samp, pre {
 .folio-header p {
   max-width: 46ch;
   color: var(--text-secondary);
-  font-size: 1.02rem;
+  font-size: 1.0625rem;
   line-height: 1.55;
 }
 
@@ -138,11 +119,11 @@ code, kbd, samp, pre {
   align-items: center;
   gap: 0.35rem;
   padding: 0.1rem 0.4rem;
-  border: 1px solid currentColor;
-  font-size: 0.72rem;
+  border: 0;
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   font-family: var(--font-mono);
 }
 
@@ -175,7 +156,8 @@ code, kbd, samp, pre {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  padding: 0.55rem 0.95rem;
+  padding: 0.7rem 1rem;
+  min-height: 44px;
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.01em;
@@ -202,9 +184,9 @@ code, kbd, samp, pre {
 }
 
 .btn-secondary {
-  background-color: transparent;
+  background-color: var(--bg-tertiary);
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
+  border: 0;
 }
 
 .btn-secondary:hover {
@@ -241,8 +223,54 @@ code, kbd, samp, pre {
   }
 
   .folio-header h1 {
-    font-size: 2.15rem;
+    font-size: clamp(2rem, 5.5vw, 2.75rem);
   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes lab-arrive {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lab-reveal {
+    from { opacity: 0; transform: scale(0.985) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes lab-symbol-enter {
+    from { opacity: 0; transform: translateY(10px) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes lab-theme-icon {
+    from { opacity: 0; transform: rotate(-35deg) scale(0.65); }
+    to { opacity: 1; transform: rotate(0) scale(1); }
+  }
+  .folio-header h1, .folio-header > p { animation: lab-arrive 650ms var(--motion-ease) both; }
+  .folio-header > p { animation-delay: 80ms; }
+  .lab-workspace .editor-card > * { animation: lab-arrive 600ms var(--motion-ease) 100ms both; }
+  .lab-workspace .editor-card > :nth-child(2) { animation-delay: 150ms; }
+  .lab-workspace .editor-card > :nth-child(3) { animation-delay: 200ms; }
+  .lab-workspace .editor-card > :nth-child(4) { animation-delay: 250ms; }
+  .lab-workspace .editor-card > :nth-child(5) { animation-delay: 300ms; }
+  .lab-workspace .reaction-display-card { animation: lab-reveal 750ms var(--motion-ease) 120ms both; }
+  .lab-workspace .formula-display-wrapper { animation: lab-symbol-enter var(--motion-panel) var(--motion-ease) both; }
+  .lab-workspace .equation-side:first-child .formula-display-wrapper:nth-of-type(3) { animation-delay: 60ms; }
+  .lab-workspace .equation-side:last-child .formula-display-wrapper { animation-delay: 140ms; }
+  .tab-content-area > *, .workspace-expanded, .manual-mode-card,
+  .guide-lead, .challenge-sheet, .classification-block[open] > :not(summary) {
+    animation: lab-arrive var(--motion-panel) var(--motion-ease) both;
+  }
+  .theme-toggle-btn svg { animation: lab-theme-icon 400ms var(--motion-ease) both; }
+  body, .masthead, .app-footer, .editor-card, .reaction-display-card,
+  .atom-counter-card, .explanation-section, .tabs-navigation-bar,
+  .guide-lead, .challenge-sheet, .interactive-challenge-equation,
+  .catalog-search-bar, .periodic-controls, input, select {
+    transition: background-color 320ms ease, color 240ms ease, border-color 240ms ease;
+  }
+  button, a, summary {
+    transition: color var(--motion-fast), background-color var(--motion-fast), transform 240ms var(--motion-ease);
+  }
+  .btn:not(:disabled):hover, .symbol-btn:hover, .theme-toggle-btn:hover { transform: translateY(-2px); }
+  .btn:not(:disabled):active, .symbol-btn:active, .theme-toggle-btn:active { transform: translateY(1px) scale(0.98); }
 }
 
 @media (prefers-reduced-motion: reduce) {

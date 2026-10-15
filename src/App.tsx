@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useState, useLayoutEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import './styles/global.css';
 import './App.css';
@@ -9,6 +9,14 @@ const SubstanceCatalogPage = lazy(() => import('./pages/SubstanceCatalogPage').t
 const ReactionGuidePage = lazy(() => import('./pages/ReactionGuidePage').then(page => ({ default: page.ReactionGuidePage })));
 const ChallengesPage = lazy(() => import('./pages/ChallengesPage').then(page => ({ default: page.ChallengesPage })));
 const PeriodicTablePage = lazy(() => import('./pages/PeriodicTablePage').then(page => ({ default: page.PeriodicTablePage })));
+
+const ScrollToPageStart = () => {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
+};
 
 export const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -27,6 +35,7 @@ export const App: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToPageStart />
       <div className="app-layout">
         <a className="skip-link" href="#main-content">Pular para o conteúdo principal</a>
         <Navbar theme={theme} onToggleTheme={toggleTheme} />

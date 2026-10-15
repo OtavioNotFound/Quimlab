@@ -47,7 +47,6 @@ export const PeriodicTablePage: React.FC = () => {
     <div className="periodic-page container">
       <header className="folio-header">
         <div>
-          <p className="page-kicker">Elementos</p>
           <h1 className="periodic-title">Tabela periódica</h1>
         </div>
         <p className="periodic-subtitle">
@@ -65,6 +64,7 @@ export const PeriodicTablePage: React.FC = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="periodic-search-input"
+              aria-label="Pesquisar elementos"
             />
           </div>
           {search && (
@@ -101,15 +101,22 @@ export const PeriodicTablePage: React.FC = () => {
 
       {/* Grade da Tabela Periódica */}
       <div className="table-scroll-wrapper">
-        <div className="periodic-grid-18">
+        <div className="periodic-grid-18" aria-label="Tabela periódica de 118 elementos">
+          <span className="f-block-label" style={{ gridColumn: '1 / span 2', gridRow: 8 }}>Lantanídeos</span>
+          <span className="f-block-label" style={{ gridColumn: '1 / span 2', gridRow: 9 }}>Actinídeos</span>
           {elements.map(el => {
             const cat = CATEGORY_COLORS[el.category] || CATEGORY_COLORS.nonmetal;
             const isMatch = filteredElements.some(f => f.symbol === el.symbol);
             const isSelected = selectedElement?.symbol === el.symbol;
+            const isDetachedLanthanide = el.category === 'lanthanide' && el.atomicNumber !== 57;
+            const isDetachedActinide = el.category === 'actinide' && el.atomicNumber !== 89;
 
-            // Coordenadas na grade periódica (1 a 7 períodos, 1 a 18 grupos)
-            const gridCol = el.group || 1;
-            const gridRow = el.period || 1;
+            const gridCol = isDetachedLanthanide
+              ? el.atomicNumber - 55
+              : isDetachedActinide
+                ? el.atomicNumber - 87
+                : el.group || 1;
+            const gridRow = isDetachedLanthanide ? 8 : isDetachedActinide ? 9 : el.period || 1;
 
             return (
               <div
@@ -157,7 +164,12 @@ export const PeriodicTablePage: React.FC = () => {
                   {CATEGORY_COLORS[selectedElement.category]?.label || selectedElement.category}
                 </span>
                 <p className="element-coords">
-                  Período: <strong>{selectedElement.period}</strong> | Grupo/Família: <strong>{selectedElement.group}</strong>
+                  Período: <strong>{selectedElement.period}</strong>
+                  {selectedElement.group !== undefined ? (
+                    <> | Grupo: <strong>{selectedElement.group}</strong></>
+                  ) : (
+                    <> | Série: <strong>{selectedElement.category === 'lanthanide' ? 'Lantanídeos' : 'Actinídeos'}</strong></>
+                  )}
                 </p>
               </div>
 
@@ -174,19 +186,19 @@ export const PeriodicTablePage: React.FC = () => {
               <div className="prop-box">
                 <span className="prop-label">Eletronegatividade (Pauling)</span>
                 <span className="prop-val font-mono">
-                  {selectedElement.electronegativity ? `${selectedElement.electronegativity}` : 'Não aplicável'}
+                  {selectedElement.electronegativity !== undefined ? `${selectedElement.electronegativity}` : 'Não informada'}
                 </span>
               </div>
               <div className="prop-box">
                 <span className="prop-label">Estados de Oxidação Comuns (Nox)</span>
                 <span className="prop-val font-mono font-bold">
-                  {selectedElement.commonOxidationStates?.map(n => (n > 0 ? `+${n}` : `${n}`)).join(', ') || '0'}
+                  {selectedElement.commonOxidationStates?.map(n => (n > 0 ? `+${n}` : `${n}`)).join(', ') || 'Não informado'}
                 </span>
               </div>
               <div className="prop-box">
                 <span className="prop-label">Configuração Eletrônica</span>
                 <span className="prop-val font-mono">
-                  {selectedElement.electronConfiguration || 'Consulte tabela espectroscópica'}
+                  {selectedElement.electronConfiguration || 'Não informada'}
                 </span>
               </div>
             </div>

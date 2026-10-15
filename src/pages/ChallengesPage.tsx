@@ -120,7 +120,6 @@ export const ChallengesPage: React.FC = () => {
     <div className="challenges-page container">
       <header className="folio-header">
         <div>
-          <p className="page-kicker">Exercícios</p>
           <h1 className="challenges-title">Desafios de balanceamento</h1>
         </div>
         <div className="challenges-aside">

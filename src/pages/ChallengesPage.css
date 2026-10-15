@@ -25,8 +25,8 @@
   align-items: baseline;
   gap: 0.7rem;
   color: var(--text-muted);
-  font-size: 0.82rem;
-  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
 }
 
 .challenge-score strong {
@@ -46,8 +46,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
-  padding: 1.25rem 0 0;
-  border-top: 2px solid var(--border-strong);
+  padding: 1.75rem;
+  background: var(--bg-secondary);
+  border-top: 0;
 }
 
 .challenge-card-header {
@@ -84,10 +85,15 @@
   justify-content: flex-start;
   gap: 1.25rem;
   flex-wrap: wrap;
-  padding: 1.6rem 0;
-  background: transparent;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  padding: 2rem;
+  min-height: 220px;
+  background: var(--reaction-field);
+  color: var(--reaction-ink);
+  --text-primary: var(--reaction-ink);
+  --text-muted: var(--reaction-muted);
+  --accent-primary: var(--reaction-ink);
+  border-top: 0;
+  border-bottom: 0;
 }
 
 .challenge-side {
@@ -110,12 +116,12 @@
 }
 
 .step-btn {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-strong);
+  background: var(--reaction-control);
   font-weight: 700;
 }
 
@@ -128,7 +134,7 @@
 .step-num,
 .step-formula,
 .step-plus {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
 }
 
 .step-num {
@@ -159,7 +165,7 @@
   gap: 0.75rem;
   padding: 0.9rem 0;
   font-size: 0.95rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 0;
 }
 
 .feedback-banner.success {

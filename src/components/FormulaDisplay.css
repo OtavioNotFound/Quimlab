@@ -7,7 +7,7 @@
 }
 
 .formula-coefficient {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 1.15em;
   font-weight: 700;
   color: var(--accent-primary);
@@ -15,7 +15,7 @@
 }
 
 .formula-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 1.15em;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -23,7 +23,7 @@
 
 .formula-inline-name {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
   font-weight: 500;
   margin-top: 0.15rem;
@@ -35,7 +35,7 @@
 }
 
 .state-arrow-indicator {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-weight: 800;
   font-size: 0.9em;
   margin-left: 0.15rem;

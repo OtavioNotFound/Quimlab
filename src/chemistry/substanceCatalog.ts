@@ -1,6 +1,27 @@
 import { CatalogSubstance } from './types';
 import { parseFormula } from './formulaParser';
 
+function createCatalogSubstance(
+  formula: string,
+  preferredName: string,
+  commonNames: string[],
+  description: string,
+  substanceType: string,
+  options: Pick<CatalogSubstance, 'stateStandard' | 'solubilityInWater'> = {}
+): CatalogSubstance {
+  const parsed = parseFormula(formula);
+  return {
+    formula,
+    preferredName,
+    commonNames,
+    description,
+    substanceType,
+    composition: parsed.elements,
+    molarMass: parsed.molarMass,
+    ...options
+  };
+}
+
 /**
  * Catálogo de substâncias químicas validadas com nomenclatura oficial (IUPAC),
  * nomes usuais/populares, massas molares e descrições didáticas em português.
@@ -437,7 +458,127 @@ export const SUBSTANCE_CATALOG: CatalogSubstance[] = [
     substanceType: 'Substância simples (não metal)',
     composition: { N: 2 },
     stateStandard: 'g'
-  }
+  },
+  createCatalogSubstance(
+    'MgO', 'Óxido de magnésio', ['Magnésia'],
+    'Óxido básico branco, pouco solúvel em água e presente em minerais como a periclásia.',
+    'Óxido básico', { stateStandard: 's', solubilityInWater: 'slightly_soluble' }
+  ),
+  createCatalogSubstance(
+    'Mg(OH)2', 'Hidróxido de magnésio', ['Leite de magnésia'],
+    'Base pouco solúvel em água, usada como antiácido e laxante em suspensões farmacêuticas.',
+    'Base inorgânica', { stateStandard: 's', solubilityInWater: 'slightly_soluble' }
+  ),
+  createCatalogSubstance(
+    'KOH', 'Hidróxido de potássio', ['Potassa cáustica'],
+    'Base forte e higroscópica, utilizada na fabricação de sabões líquidos e em processos industriais.',
+    'Base forte', { stateStandard: 's', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'CaCl2', 'Cloreto de cálcio', ['Cloreto cálcico'],
+    'Sal higroscópico e muito solúvel em água, usado como dessecante e em misturas refrigerantes.',
+    'Sal inorgânico', { stateStandard: 's', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'Na2SO4', 'Sulfato de sódio', ['Sal de Glauber'],
+    'Sal solúvel empregado na fabricação de papel, vidro e detergentes.',
+    'Sal oxigenado', { stateStandard: 's', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'BaSO4', 'Sulfato de bário', ['Barita'],
+    'Sal muito pouco solúvel em água, encontrado no mineral barita e usado como contraste radiológico sob orientação médica.',
+    'Sal oxigenado insolúvel', { stateStandard: 's', solubilityInWater: 'insoluble' }
+  ),
+  createCatalogSubstance(
+    'KNO3', 'Nitrato de potássio', ['Salitre'],
+    'Sal solúvel que fornece íons potássio e nitrato e é usado em fertilizantes.',
+    'Sal oxigenado', { stateStandard: 's', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'NH4NO3', 'Nitrato de amônio', ['Nitrato amônico'],
+    'Sal solúvel usado como fonte de nitrogênio em fertilizantes; é um agente oxidante e requer armazenamento adequado.',
+    'Sal de amônio', { stateStandard: 's', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'H3PO4', 'Ácido fosfórico', ['Ácido ortofosfórico'],
+    'Oxiácido triprótico usado na produção de fertilizantes fosfatados e em processos alimentícios.',
+    'Oxiácido triprótico', { solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'H2S', 'Sulfeto de hidrogênio', ['Gás sulfídrico', 'Ácido sulfídrico em solução'],
+    'Gás tóxico de odor característico; em água, comporta-se como um ácido fraco.',
+    'Hidrácido fraco', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'SO2', 'Dióxido de enxofre', ['Anidrido sulfuroso'],
+    'Óxido ácido gasoso liberado em algumas combustões e processos vulcânicos; em água, forma espécies ácidas.',
+    'Óxido ácido', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'SO3', 'Trióxido de enxofre', ['Anidrido sulfúrico'],
+    'Óxido ácido que reage com água formando ácido sulfúrico.',
+    'Óxido ácido'
+  ),
+  createCatalogSubstance(
+    'NO', 'Monóxido de nitrogênio', ['Óxido nítrico'],
+    'Gás que se oxida no ar, formando dióxido de nitrogênio.',
+    'Óxido neutro', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'NO2', 'Dióxido de nitrogênio', ['Óxido nítrico(IV)'],
+    'Gás tóxico castanho-avermelhado que participa da formação de ácidos na atmosfera.',
+    'Óxido ácido', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'N2O', 'Monóxido de dinitrogênio', ['Óxido nitroso', 'Gás hilariante'],
+    'Gás usado como anestésico em contextos clínicos e que também contribui para o efeito estufa.',
+    'Óxido neutro', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'C2H6', 'Etano', ['Etano gasoso'],
+    'Hidrocarboneto alcano presente no gás natural e usado como matéria-prima petroquímica.',
+    'Hidrocarboneto (alcano)', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'C3H8', 'Propano', ['Gás propano'],
+    'Hidrocarboneto alcano usado como combustível em botijões e em aplicações industriais.',
+    'Hidrocarboneto (alcano)', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'C2H4', 'Eteno', ['Etileno'],
+    'Hidrocarboneto alceno usado na produção de polietileno e no amadurecimento de frutos.',
+    'Hidrocarboneto (alceno)', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'C2H2', 'Etino', ['Acetileno'],
+    'Hidrocarboneto alcino gasoso usado como combustível em maçaricos de soldagem.',
+    'Hidrocarboneto (alcino)', { stateStandard: 'g' }
+  ),
+  createCatalogSubstance(
+    'CH3OH', 'Metanol', ['Álcool metílico'],
+    'Álcool líquido, tóxico e inflamável, usado como solvente e matéria-prima industrial.',
+    'Composto orgânico (álcool)', { stateStandard: 'l', solubilityInWater: 'soluble' }
+  ),
+  createCatalogSubstance(
+    'Al2O3', 'Óxido de alumínio', ['Alumina', 'Coríndon'],
+    'Óxido anfótero encontrado em minerais e usado na produção de alumínio e de materiais cerâmicos.',
+    'Óxido anfótero', { stateStandard: 's', solubilityInWater: 'insoluble' }
+  ),
+  createCatalogSubstance(
+    'CuO', 'Óxido de cobre(II)', ['Óxido cúprico'],
+    'Sólido preto insolúvel em água, usado em pigmentos e em processos metalúrgicos.',
+    'Óxido básico', { stateStandard: 's', solubilityInWater: 'insoluble' }
+  ),
+  createCatalogSubstance(
+    'PbI2', 'Iodeto de chumbo(II)', ['Iodeto plumboso'],
+    'Sal amarelo pouco solúvel em água, conhecido por formar precipitado em reações de dupla troca.',
+    'Sal halogenado', { stateStandard: 's', solubilityInWater: 'slightly_soluble' }
+  ),
+  createCatalogSubstance(
+    'NaF', 'Fluoreto de sódio', ['Fluoreto sódico'],
+    'Sal solúvel usado em produtos odontológicos para ajudar na prevenção de cáries.',
+    'Sal halogenado', { stateStandard: 's', solubilityInWater: 'soluble' }
+  )
 ];
 
 /**

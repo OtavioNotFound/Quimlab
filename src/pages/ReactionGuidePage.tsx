@@ -91,7 +91,6 @@ export const ReactionGuidePage: React.FC = () => {
     <div className="reaction-guide-page container">
       <header className="folio-header">
         <div>
-          <p className="page-kicker">Guia</p>
           <h1 className="guide-title">Tipos de reação</h1>
         </div>
         <p className="guide-subtitle">

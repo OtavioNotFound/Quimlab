@@ -48,7 +48,6 @@ export const SubstanceCatalogPage: React.FC = () => {
     <div className="substance-catalog-page container">
       <header className="folio-header">
         <div>
-          <p className="page-kicker">Índice</p>
           <h1 className="catalog-title">Catálogo de substâncias</h1>
         </div>
         <p className="catalog-subtitle">

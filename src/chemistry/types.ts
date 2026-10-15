@@ -82,6 +82,10 @@ export interface ReactionClassificationResult {
 }
 
 export interface CatalogSubstance {
+  id?: string;
+  sourceUrl?: string;
+  pubchemCid?: string;
+  catalogGroup?: 'reference';
   formula: string;
   preferredName: string;
   commonNames: string[];

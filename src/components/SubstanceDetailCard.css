@@ -4,7 +4,7 @@
   align-items: start;
   gap: 1.25rem 2rem;
   padding: 1.15rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 0;
 }
 
 .substance-card-top {
@@ -21,7 +21,7 @@
 }
 
 .substance-card-coeff {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 600;
   color: var(--accent-primary);
@@ -46,7 +46,7 @@
 }
 
 .substance-common-names {
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -59,7 +59,7 @@
 .substance-role,
 .substance-meta-line {
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.875rem;
 }
 
 .substance-meta-line {
@@ -78,7 +78,7 @@
 }
 
 .composition-label {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -89,8 +89,8 @@
 }
 
 .composition-item {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
 }
 
 @media (max-width: 600px) {

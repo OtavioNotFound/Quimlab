@@ -280,326 +280,343 @@ export const SimulatorPage: React.FC = () => {
     <div className="simulator-page container">
       <header className="folio-header">
         <div>
-          <p className="page-kicker">Laboratório</p>
-          <h1 className="simulator-title">Balancear equação</h1>
+          <h1 className="simulator-title">Balancear equações</h1>
         </div>
         <p className="simulator-subtitle">
-          Digite reagentes e produtos para conferir a proporção estequiométrica. O cálculo usa frações exatas, sem arredondamento.
+          Toda reação tem uma proporção. Explore os reagentes, encontre o equilíbrio e veja o que se conserva.
         </p>
       </header>
 
-      <div className="preset-picker">
-        <label htmlFor="reaction-example">Reação de partida</label>
-        <select
-          id="reaction-example"
-          value={selectedPreset}
-          onChange={event => {
-            const preset = PRESET_REACTIONS.find(item => item.id === event.target.value);
-            if (preset) handleApplyPreset(preset);
-          }}
-        >
-          {PRESET_REACTIONS.map(preset => (
-            <option key={preset.id} value={preset.id}>{preset.name}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Montador Visual Opcional */}
-      {showVisualBuilder && (
-        <VisualEquationBuilder
-          reactants={currentVisualReactants}
-          products={currentVisualProducts}
-          onChange={handleVisualBuilderChange}
-          onClose={() => setShowVisualBuilder(false)}
-        />
-      )}
-
-      {/* Editor Principal da Equação */}
-      <section className="editor-card">
-        <div className="editor-top-bar">
-          <label htmlFor="equation-input" className="editor-label">
-            Equação Química:
-          </label>
-          <div className="quick-symbols">
-            <span className="symbols-label">Inserir:</span>
-            {['+', '->', '⇌', '(s)', '(l)', '(g)', '(aq)'].map(sym => (
-              <button
-                key={sym}
-                type="button"
-                onClick={() => insertSymbol(sym)}
-                className="symbol-btn"
-              >
-                {sym}
-              </button>
-            ))}
+      <div className="lab-workspace">
+        <section className="editor-card" aria-label="Editor de reação">
+          <div className="preset-picker">
+            <label htmlFor="reaction-example">Comece por um exemplo</label>
+            <select
+              id="reaction-example"
+              value={selectedPreset}
+              onChange={event => {
+                const preset = PRESET_REACTIONS.find(item => item.id === event.target.value);
+                if (preset) handleApplyPreset(preset);
+              }}
+            >
+              {PRESET_REACTIONS.map(preset => (
+                <option key={preset.id} value={preset.id}>{preset.name}</option>
+              ))}
+            </select>
           </div>
-        </div>
 
-        <div className="input-wrapper">
-          <input
-            id="equation-input"
-            type="text"
-            value={equationInput}
-            onChange={e => setEquationInput(e.target.value)}
-            placeholder="Ex: H2 + O2 -> H2O ou CaCO3 -> CaO + CO2"
-            className="equation-text-input"
-            autoComplete="off"
-            spellCheck="false"
-          />
-        </div>
+          {/* Editor Principal da Equação */}
+          <div className="editor-top-bar">
+            <label htmlFor="equation-input" className="editor-label">
+              Sua equação
+            </label>
+            <div className="quick-symbols">
+              <span className="symbols-label">Inserir:</span>
+              {['+', '->', '⇌', '(s)', '(l)', '(g)', '(aq)'].map(sym => (
+                <button
+                  key={sym}
+                  type="button"
+                  onClick={() => insertSymbol(sym)}
+                  className="symbol-btn"
+                >
+                  {sym}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Mensagem de Erro no Parsing */}
-        {parsedEq && !parsedEq.isValid && (
-          <div className="parse-error-box">
-            <p className="error-message">{parsedEq.error}</p>
+          <div className="input-wrapper">
+            <input
+              id="equation-input"
+              type="text"
+              value={equationInput}
+              onChange={e => setEquationInput(e.target.value)}
+              placeholder="Ex: H2 + O2 -> H2O ou CaCO3 -> CaO + CO2"
+              className="equation-text-input"
+              autoComplete="off"
+              spellCheck="false"
+              aria-describedby="equation-help"
+            />
+          </div>
+          <p id="equation-help" className="equation-help">Use + entre substâncias e → entre reagentes e produtos.</p>
+
+          {/* Mensagem de Erro no Parsing */}
+          {parsedEq && !parsedEq.isValid && (
+            <div className="parse-error-box">
+              <p className="error-message">{parsedEq.error}</p>
+            </div>
+          )}
+
+          {/* Barra de Ações do Simulador */}
+          <div className="editor-actions-bar">
+            <button
+              onClick={handleAutoBalance}
+              className="btn btn-primary"
+              disabled={!parsedEq?.isValid}
+              title="Balancear equação automaticamente pelo método algébrico de frações exatas"
+            >
+              <Scale size={18} />
+              <span>Balancear equação</span>
+            </button>
+
+            {productPrediction && (
+              <button
+                onClick={() => {
+                  const completedReaction = balanceEquation(productPrediction.equation);
+                  setEquationInput(
+                    completedReaction.success && completedReaction.balancedEquation
+                      ? completedReaction.balancedEquation
+                      : productPrediction.equation
+                  );
+                  setManualMode(false);
+                }}
+                className="btn btn-secondary"
+                title="Sugere produtos para reações conhecidas; confira se correspondem às condições da reação"
+              >
+                <ChevronRight size={18} />
+                <span>Completar produtos</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => setShowVisualBuilder(!showVisualBuilder)}
+              className={`btn ${showVisualBuilder ? 'btn-primary' : 'btn-secondary'}`}
+              title="Abrir o montador visual com catálogo de substâncias"
+            >
+              <PenTool size={18} />
+              <span>{showVisualBuilder ? 'Ocultar Montador' : 'Montador Visual'}</span>
+            </button>
+
+            <button
+              onClick={() => setShowPeriodicModal(true)}
+              className="btn btn-secondary"
+              title="Abrir tabela periódica rápida"
+            >
+              <Compass size={18} />
+              <span>Tabela Periódica</span>
+            </button>
+
+            <button
+              onClick={() => setManualMode(!manualMode)}
+              className={`btn ${manualMode ? 'btn-primary' : 'btn-secondary'}`}
+              disabled={!parsedEq?.isValid}
+              title="Ajustar coeficientes estequiométricos manualmente com botões de incremento"
+            >
+              <Sliders size={18} />
+              <span>{manualMode ? 'Sair do Manual' : 'Desafio Manual'}</span>
+            </button>
+
+            <button
+              onClick={handleToggleFavorite}
+              className={`btn btn-secondary ${isCurrentFav ? 'btn-fav-active' : ''}`}
+              title={isCurrentFav ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+            >
+              <Star size={18} className={isCurrentFav ? 'star-filled' : ''} />
+              <span>{isCurrentFav ? 'Favoritado' : 'Favoritar'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                refreshStorageData();
+                setShowHistoryModal(true);
+              }}
+              className="btn btn-secondary"
+              title="Ver histórico recente e equações favoritas"
+            >
+              <History size={18} />
+              <span>Histórico</span>
+            </button>
+
+            <div className="copy-action-group">
+              <button
+                onClick={() => handleCopyEquation('plain')}
+                className="btn btn-secondary"
+                title="Copiar equação balanceada para a área de transferência"
+              >
+                {copyFeedback ? <Check size={16} className="text-emerald" /> : <Copy size={16} />}
+                <span>{copyFeedback || 'Copiar'}</span>
+              </button>
+              <button
+                onClick={() => handleCopyEquation('latex')}
+                className="btn btn-secondary btn-icon-only"
+                title="Copiar em formato LaTeX para relatórios"
+              >
+                <span className="latex-badge">TeX</span>
+              </button>
+            </div>
+
+            <button
+              onClick={() => setEquationInput('')}
+              className="btn btn-secondary"
+              title="Limpar equação atual"
+            >
+              <Trash2 size={18} />
+              <span>Limpar</span>
+            </button>
+          </div>
+        </section>
+
+        {showVisualBuilder && (
+          <div className="workspace-expanded">
+            <VisualEquationBuilder
+              reactants={currentVisualReactants}
+              products={currentVisualProducts}
+              onChange={handleVisualBuilderChange}
+              onClose={() => setShowVisualBuilder(false)}
+            />
           </div>
         )}
 
-        {/* Barra de Ações do Simulador */}
-        <div className="editor-actions-bar">
-          <button
-            onClick={handleAutoBalance}
-            className="btn btn-primary"
-            disabled={!parsedEq?.isValid}
-            title="Balancear equação automaticamente pelo método algébrico de frações exatas"
-          >
-            <Scale size={18} />
-            <span>Balancear Automaticamente</span>
-          </button>
+        {/* Modo Desafio Manual com Controles de Coeficientes */}
+        {manualMode && parsedEq?.isValid && (
+          <section className="manual-mode-card card">
+            <div className="manual-header">
+              <h3>Ajuste os coeficientes</h3>
+              <p>Utilize os botões + e - para encontrar a menor proporção inteira que balanceia a equação.</p>
+            </div>
 
-          {productPrediction && (
-            <button
-              onClick={() => {
-                const completedReaction = balanceEquation(productPrediction.equation);
-                setEquationInput(
-                  completedReaction.success && completedReaction.balancedEquation
-                    ? completedReaction.balancedEquation
-                    : productPrediction.equation
-                );
-                setManualMode(false);
-              }}
-              className="btn btn-secondary"
-              title="Sugere produtos para reações conhecidas; confira se correspondem às condições da reação"
-            >
-              <ChevronRight size={18} />
-              <span>Completar produtos</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => setShowVisualBuilder(!showVisualBuilder)}
-            className={`btn ${showVisualBuilder ? 'btn-primary' : 'btn-secondary'}`}
-            title="Abrir o montador visual com catálogo de substâncias"
-          >
-            <PenTool size={18} />
-            <span>{showVisualBuilder ? 'Ocultar Montador' : 'Montador Visual'}</span>
-          </button>
-
-          <button
-            onClick={() => setShowPeriodicModal(true)}
-            className="btn btn-secondary"
-            title="Abrir tabela periódica rápida"
-          >
-            <Compass size={18} />
-            <span>Tabela Periódica</span>
-          </button>
-
-          <button
-            onClick={() => setManualMode(!manualMode)}
-            className={`btn ${manualMode ? 'btn-primary' : 'btn-secondary'}`}
-            disabled={!parsedEq?.isValid}
-            title="Ajustar coeficientes estequiométricos manualmente com botões de incremento"
-          >
-            <Sliders size={18} />
-            <span>{manualMode ? 'Sair do Manual' : 'Desafio Manual'}</span>
-          </button>
-
-          <button
-            onClick={handleToggleFavorite}
-            className={`btn btn-secondary ${isCurrentFav ? 'btn-fav-active' : ''}`}
-            title={isCurrentFav ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-          >
-            <Star size={18} className={isCurrentFav ? 'star-filled' : ''} />
-            <span>{isCurrentFav ? 'Favoritado' : 'Favoritar'}</span>
-          </button>
-
-          <button
-            onClick={() => {
-              refreshStorageData();
-              setShowHistoryModal(true);
-            }}
-            className="btn btn-secondary"
-            title="Ver histórico recente e equações favoritas"
-          >
-            <History size={18} />
-            <span>Histórico</span>
-          </button>
-
-          <div className="copy-action-group">
-            <button
-              onClick={() => handleCopyEquation('plain')}
-              className="btn btn-secondary"
-              title="Copiar equação balanceada para a área de transferência"
-            >
-              {copyFeedback ? <Check size={16} className="text-emerald" /> : <Copy size={16} />}
-              <span>{copyFeedback || 'Copiar'}</span>
-            </button>
-            <button
-              onClick={() => handleCopyEquation('latex')}
-              className="btn btn-secondary btn-icon-only"
-              title="Copiar em formato LaTeX para relatórios"
-            >
-              <span className="latex-badge">TeX</span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => setEquationInput('')}
-            className="btn btn-secondary"
-            title="Limpar equação atual"
-          >
-            <Trash2 size={18} />
-            <span>Limpar</span>
-          </button>
-        </div>
-      </section>
-
-      {/* Modo Desafio Manual com Controles de Coeficientes */}
-      {manualMode && parsedEq?.isValid && (
-        <section className="manual-mode-card card">
-          <div className="manual-header">
-            <h3>Desafio: Ajuste Manual de Coeficientes</h3>
-            <p>Utilize os botões + e - para encontrar a menor proporção inteira que balanceia a equação.</p>
-          </div>
-
-          <div className="manual-equation-builder">
-            {/* Reagentes */}
-            <div className="side-builders">
-              <span className="side-label">Reagentes:</span>
-              <div className="participants-builder-list">
-                {parsedEq.reactants.map((r, idx) => (
-                  <div key={idx} className="participant-stepper-box">
-                    <div className="stepper-controls">
-                      <button
-                        onClick={() => handleManualCoeffChange('reactants', idx, -1)}
-                        className="stepper-btn"
-                      >
-                        -
-                      </button>
-                      <span className="stepper-value">{manualCoeffs.reactants[idx] || 1}</span>
-                      <button
-                        onClick={() => handleManualCoeffChange('reactants', idx, 1)}
-                        className="stepper-btn"
-                      >
-                        +
-                      </button>
+            <div className="manual-equation-builder">
+              {/* Reagentes */}
+              <div className="side-builders">
+                <span className="side-label">Reagentes:</span>
+                <div className="participants-builder-list">
+                  {parsedEq.reactants.map((r, idx) => (
+                    <div key={idx} className="participant-stepper-box">
+                      <div className="stepper-controls">
+                        <button
+                          onClick={() => handleManualCoeffChange('reactants', idx, -1)}
+                          className="stepper-btn"
+                        >
+                          -
+                        </button>
+                        <span className="stepper-value">{manualCoeffs.reactants[idx] || 1}</span>
+                        <button
+                          onClick={() => handleManualCoeffChange('reactants', idx, 1)}
+                          className="stepper-btn"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className="stepper-formula">{r.formula}</span>
                     </div>
-                    <span className="stepper-formula">{r.formula}</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              <div className="arrow-divider">
+                <ChevronRight size={24} />
+              </div>
+
+              {/* Produtos */}
+              <div className="side-builders">
+                <span className="side-label">Produtos:</span>
+                <div className="participants-builder-list">
+                  {parsedEq.products.map((p, idx) => (
+                    <div key={idx} className="participant-stepper-box">
+                      <div className="stepper-controls">
+                        <button
+                          onClick={() => handleManualCoeffChange('products', idx, -1)}
+                          className="stepper-btn"
+                        >
+                          -
+                        </button>
+                        <span className="stepper-value">{manualCoeffs.products[idx] || 1}</span>
+                        <button
+                          onClick={() => handleManualCoeffChange('products', idx, 1)}
+                          className="stepper-btn"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className="stepper-formula">{p.formula}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="arrow-divider">
-              <ChevronRight size={24} />
+            <div className="manual-actions">
+              <button onClick={handleCheckManualBalance} className="btn btn-primary">
+                <CheckCircle size={18} />
+                <span>Verificar Meu Balanceamento</span>
+              </button>
             </div>
 
-            {/* Produtos */}
-            <div className="side-builders">
-              <span className="side-label">Produtos:</span>
-              <div className="participants-builder-list">
-                {parsedEq.products.map((p, idx) => (
-                  <div key={idx} className="participant-stepper-box">
-                    <div className="stepper-controls">
-                      <button
-                        onClick={() => handleManualCoeffChange('products', idx, -1)}
-                        className="stepper-btn"
-                      >
-                        -
-                      </button>
-                      <span className="stepper-value">{manualCoeffs.products[idx] || 1}</span>
-                      <button
-                        onClick={() => handleManualCoeffChange('products', idx, 1)}
-                        className="stepper-btn"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <span className="stepper-formula">{p.formula}</span>
-                  </div>
-                ))}
+            {manualFeedback && (
+              <div className={`manual-feedback-banner ${manualFeedback.includes('Parabéns') ? 'success' : 'hint'}`}>
+                {manualFeedback}
               </div>
-            </div>
-          </div>
-
-          <div className="manual-actions">
-            <button onClick={handleCheckManualBalance} className="btn btn-primary">
-              <CheckCircle size={18} />
-              <span>Verificar Meu Balanceamento</span>
-            </button>
-          </div>
-
-          {manualFeedback && (
-            <div className={`manual-feedback-banner ${manualFeedback.includes('Parabéns') ? 'success' : 'hint'}`}>
-              {manualFeedback}
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* Visualização da Reação em Andamento */}
-      {parsedEq && parsedEq.isValid && (
-        <section className="reaction-display-card card">
-          <div className="reaction-display-header">
-            <span className="section-title">Figura da reação</span>
-            {molecularBalance && (
-              <span className="badge badge-success">Equação equilibrada</span>
             )}
-          </div>
+          </section>
+        )}
 
-          <div className="equation-visual-row">
-            <div className="equation-side">
-              {(displayedEquation?.reactants ?? parsedEq.reactants).map((r, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <span className="plus-symbol">+</span>}
-                  <FormulaDisplay
-                    formula={r.formula}
-                    coefficient={r.coefficient}
-                    showTooltip={true}
-                  />
-                </React.Fragment>
-              ))}
+        {/* Visualização da Reação em Andamento */}
+        {parsedEq && parsedEq.isValid && (
+          <section className="reaction-display-card card">
+            <div className="reaction-display-header">
+              <h2 className="section-title">O equilíbrio da reação</h2>
+              {molecularBalance && (
+                <span className="badge badge-success"><CheckCircle size={15} aria-hidden="true" /> Equilibrada</span>
+              )}
             </div>
 
-            <div className="equation-arrow-container">
-              <span className="reaction-arrow">{parsedEq.isReversible ? '⇌' : '→'}</span>
+            <div
+              className="equation-visual-row"
+              key={manualMode
+                ? `manual:${manualCoeffs.reactants.join(',')}:${manualCoeffs.products.join(',')}`
+                : balanceResult?.balancedEquation}
+            >
+              <div className="equation-side">
+                {(displayedEquation?.reactants ?? parsedEq.reactants).map((r, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && <span className="plus-symbol">+</span>}
+                    <FormulaDisplay
+                      formula={r.formula}
+                      coefficient={r.coefficient}
+                      showTooltip={true}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
+
+              <div className="equation-arrow-container">
+                <span className="reaction-arrow">{parsedEq.isReversible ? '⇌' : '→'}</span>
+              </div>
+
+              <div className="equation-side">
+                {(displayedEquation?.products ?? parsedEq.products).map((p, j) => (
+                  <React.Fragment key={j}>
+                    {j > 0 && <span className="plus-symbol">+</span>}
+                    <FormulaDisplay
+                      formula={p.formula}
+                      coefficient={p.coefficient}
+                      showTooltip={true}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
             </div>
 
-            <div className="equation-side">
-              {(displayedEquation?.products ?? parsedEq.products).map((p, j) => (
-                <React.Fragment key={j}>
-                  {j > 0 && <span className="plus-symbol">+</span>}
-                  <FormulaDisplay
-                    formula={p.formula}
-                    coefficient={p.coefficient}
-                    showTooltip={true}
-                  />
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-
-          {/* Classificação da Reação */}
-          {classification && (
-            <div className="classification-block">
-              <ReactionBadges
-                classifications={classification.classifications}
-                characteristics={classification.characteristics}
-              />
-            </div>
-          )}
-        </section>
-      )}
+            {/* Classificação da Reação */}
+            {classification && (
+              <details className="classification-block">
+                <summary>Entender esta reação</summary>
+                <ReactionBadges
+                  classifications={classification.classifications}
+                  characteristics={classification.characteristics}
+                />
+              </details>
+            )}
+            <p className="reaction-note">Os átomos se reorganizam.<br />A matéria se conserva.</p>
+          </section>
+        )}
+        {(!parsedEq || !parsedEq.isValid) && (
+          <section className="reaction-display-card reaction-empty" aria-label="Resultado da reação">
+            <h2>Qual será a próxima reação?</h2>
+            <p>Escolha um exemplo ou digite uma equação. O resultado aparece aqui.</p>
+          </section>
+        )}
+      </div>
 
       {/* ==================================================================== */}
       {/* ABAS MULTIDIMENSIONAIS DE APRENDIZADO QUÍMICO */}
@@ -658,7 +675,13 @@ export const SimulatorPage: React.FC = () => {
                     <div className="explanation-header">
                       <h3>O que acontece nesta reação</h3>
                     </div>
-                    <p className="explanation-text">{classification.explanation}</p>
+                    <p className="explanation-text">
+                      {classification.explanation.split(/(\*\*.*?\*\*)/g).map((part, index) =>
+                        part.startsWith('**')
+                          ? <strong key={index}>{part.slice(2, -2)}</strong>
+                          : part
+                      )}
+                    </p>
                     {balanceResult.explanation && (
                       <p className="explanation-subtext">{balanceResult.explanation}</p>
                     )}
@@ -666,7 +689,7 @@ export const SimulatorPage: React.FC = () => {
                 )}
 
                 <section className="participants-catalog-section">
-                  <h3 className="section-heading">Substâncias Envolvidas na Reação</h3>
+                  <h3 className="section-heading">Substâncias da reação</h3>
                   <div className="substances-grid">
                     {displayedEquation?.reactants.map((r, idx) => (
                       <SubstanceDetailCard

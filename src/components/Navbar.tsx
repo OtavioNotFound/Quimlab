@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FlaskConical, Moon, Sun } from 'lucide-react';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -23,8 +24,8 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
       <div className="container masthead-inner">
         <div className="masthead-top">
           <Link to="/" className="wordmark">
+            <FlaskConical className="wordmark-icon" size={29} strokeWidth={1.7} aria-hidden="true" />
             <span className="wordmark-name">QuimLab</span>
-            <span className="wordmark-tag">Simulador de reações</span>
           </Link>
           <button
             onClick={onToggleTheme}
@@ -32,7 +33,8 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
             title={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
             aria-label={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
           >
-            {theme === 'dark' ? 'Claro' : 'Escuro'}
+            {theme === 'dark' ? <Sun key="sun" size={18} aria-hidden="true" /> : <Moon key="moon" size={18} aria-hidden="true" />}
+            <span>{theme === 'dark' ? 'Claro' : 'Escuro'}</span>
           </button>
         </div>
 

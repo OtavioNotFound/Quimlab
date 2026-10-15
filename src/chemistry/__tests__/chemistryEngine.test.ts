@@ -3,10 +3,22 @@ import { parseFormula, formatFormulaDisplay } from '../formulaParser';
 import { parseEquation } from '../equationParser';
 import { balanceEquation } from '../balancer';
 import { classifyReaction } from '../reactionClassifier';
-import { findSubstanceInCatalog } from '../substanceCatalog';
+import { SUBSTANCE_CATALOG, findSubstanceInCatalog } from '../substanceCatalog';
 import { predictReactionProducts } from '../productPredictor';
+import { getAllElements } from '../periodicTable';
 
 describe('QuimLab Chemical Engine', () => {
+  describe('Periodic table data', () => {
+    it('contains each atomic number from 1 through 118 exactly once', () => {
+      const elements = getAllElements();
+
+      expect(elements).toHaveLength(118);
+      expect(elements.map(element => element.atomicNumber)).toEqual(
+        Array.from({ length: 118 }, (_, index) => index + 1)
+      );
+    });
+  });
+
   describe('Product Predictor', () => {
     it('completa reagentes que correspondem a um exemplo conhecido', () => {
       expect(predictReactionProducts('H2 + O2 ->')?.equation).toBe('H2 + O2 -> H2O');
@@ -171,6 +183,25 @@ describe('QuimLab Chemical Engine', () => {
   });
 
   describe('Substance Catalog', () => {
+    it('inclui exemplos escolares adicionais com massa e composição coerentes com o parser', () => {
+      const formulas = [
+        'MgO', 'Mg(OH)2', 'KOH', 'CaCl2', 'Na2SO4', 'BaSO4', 'KNO3', 'NH4NO3',
+        'H3PO4', 'H2S', 'SO2', 'SO3', 'NO', 'NO2', 'N2O', 'C2H6', 'C3H8',
+        'C2H4', 'C2H2', 'CH3OH', 'Al2O3', 'CuO', 'PbI2', 'NaF'
+      ];
+
+      for (const formula of formulas) {
+        const substance = findSubstanceInCatalog(formula);
+        const parsed = parseFormula(formula);
+
+        expect(substance, formula).toBeDefined();
+        expect(substance?.composition, formula).toEqual(parsed.elements);
+        expect(substance?.molarMass, formula).toBe(parsed.molarMass);
+      }
+
+      expect(SUBSTANCE_CATALOG).toHaveLength(64);
+    });
+
     it('deve localizar substâncias conhecidas por fórmula e composição', () => {
       const water = findSubstanceInCatalog('H2O');
       expect(water).toBeDefined();

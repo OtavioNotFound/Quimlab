@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  border-bottom: 2px solid var(--border-strong);
+  border-bottom: 0;
   padding: 0.55rem 0;
 }
 
@@ -51,7 +51,7 @@
   display: flex;
   gap: 0.85rem;
   min-width: 0;
-  overflow-x: auto;
+  flex-wrap: wrap;
 }
 
 .filter-chip {
@@ -78,7 +78,7 @@
 .catalog-results-header {
   font-size: 0.86rem;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
 }
 
 .catalog-results-header strong {
@@ -89,7 +89,7 @@
 .catalog-grid {
   display: flex;
   flex-direction: column;
-  border-top: 2px solid var(--border-strong);
+  border-top: 0;
 }
 
 @media (max-width: 768px) {
@@ -97,3 +97,12 @@
     padding-top: 1.15rem;
   }
 }
+
+.catalog-search-bar { background: var(--bg-secondary); padding: 1.5rem; }
+.catalog-search-bar .search-input-group { background: var(--bg-primary); padding: 0.8rem 1rem; }
+.catalog-search-bar .filter-chip { padding: 0.5rem 0.8rem; min-height: 44px; border: 0; background: var(--bg-primary); }
+.catalog-search-bar .filter-chip.active { background: var(--bg-ink); color: var(--text-inverse); }
+.catalog-filter-tabs > .filter-icon { margin-top: 0.9rem; flex-shrink: 0; }
+.catalog-grid .substance-detail-card { padding: 1.5rem; }
+.catalog-grid .substance-detail-card:nth-child(odd) { background: var(--bg-secondary); }
+.catalog-grid .substance-card-formula { font-size: 2.5rem; }
