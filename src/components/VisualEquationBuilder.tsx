@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { SUBSTANCE_CATALOG } from '../chemistry/substanceCatalog';
 import { formatFormulaDisplay } from '../chemistry/formulaParser';
+import { parseEquation } from '../chemistry/equationParser';
+import { predictReactionProducts } from '../chemistry/productPredictor';
 import { Plus, Trash2, ArrowRight, X, Search } from 'lucide-react';
 import './VisualEquationBuilder.css';
 
@@ -25,6 +27,12 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [customInput, setCustomInput] = useState('');
   const [targetSide, setTargetSide] = useState<'reactants' | 'products'>('reactants');
+  const reactantExpression = reactants
+    .map(item => `${item.coefficient > 1 ? `${item.coefficient} ` : ''}${item.formula}`)
+    .join(' + ');
+  const productPrediction = products.length === 0
+    ? predictReactionProducts(reactantExpression)
+    : null;
 
   // Filtra catálogo para seleção rápida
   const filteredCatalog = SUBSTANCE_CATALOG.filter(s => {
@@ -32,7 +40,8 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
     const q = searchTerm.toLowerCase();
     return (
       s.formula.toLowerCase().includes(q) ||
-      s.preferredName.toLowerCase().includes(q)
+      s.preferredName.toLowerCase().includes(q) ||
+      s.commonNames.some(name => name.toLowerCase().includes(q))
     );
   }).slice(0, 10);
 
@@ -84,6 +93,20 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
     } else {
       onChange(reactants, products.filter((_, i) => i !== index));
     }
+  };
+
+  const handlePredictProducts = () => {
+    if (!productPrediction) return;
+    const parsed = parseEquation(productPrediction.equation);
+    if (!parsed.isValid) return;
+
+    onChange(
+      reactants,
+      parsed.products.map(product => ({
+        formula: product.formula,
+        coefficient: product.coefficient
+      }))
+    );
   };
 
   return (
@@ -151,7 +174,15 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
           </div>
           <div className="side-items-list">
             {products.length === 0 ? (
-              <span className="empty-side-placeholder">Nenhum produto selecionado</span>
+              <div className="empty-products-state">
+                <span className="empty-side-placeholder">Nenhum produto selecionado</span>
+                {productPrediction && (
+                  <button type="button" onClick={handlePredictProducts} className="predict-products-btn">
+                    Prever {productPrediction.products.map(formatFormulaDisplay).join(' + ')}
+                    <ArrowRight size={14} />
+                  </button>
+                )}
+              </div>
             ) : (
               products.map((item, idx) => (
                 <div key={idx} className="builder-item-pill">
@@ -214,7 +245,7 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
           <div className="quick-substances-grid">
             {filteredCatalog.map(sub => (
               <button
-                key={sub.formula}
+                key={sub.id ?? `${sub.formula}-${sub.preferredName}`}
                 onClick={() => handleAddSubstance(sub.formula, targetSide)}
                 className="quick-sub-btn"
                 title={`${sub.preferredName} (${sub.substanceType})`}

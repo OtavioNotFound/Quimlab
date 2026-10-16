@@ -52,6 +52,19 @@ import './SimulatorPage.css';
 
 type SimulatorTab = 'details' | 'molecules' | 'stoichiometry' | 'redox';
 
+function parseVisualReactants(input: string): ParticipantItem[] {
+  const reactantSide = input.split(/<=>|<->|⇌|-->|->|==>|=>|→|=/)[0]?.trim();
+  if (!reactantSide) return [];
+
+  const parsed = parseEquation(`${reactantSide} -> H2O`);
+  if (!parsed.isValid) return [];
+
+  return parsed.reactants.map(reactant => ({
+    formula: reactant.formula,
+    coefficient: reactant.coefficient
+  }));
+}
+
 export const SimulatorPage: React.FC = () => {
   const [equationInput, setEquationInput] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
@@ -236,7 +249,7 @@ export const SimulatorPage: React.FC = () => {
 
   const currentVisualReactants: ParticipantItem[] = parsedEq?.isValid
     ? parsedEq.reactants.map(r => ({ formula: r.formula, coefficient: r.coefficient }))
-    : [];
+    : parseVisualReactants(equationInput);
 
   const currentVisualProducts: ParticipantItem[] = parsedEq?.isValid
     ? parsedEq.products.map(p => ({ formula: p.formula, coefficient: p.coefficient }))
@@ -275,6 +288,17 @@ export const SimulatorPage: React.FC = () => {
     : null;
 
   const productPrediction = predictReactionProducts(equationInput);
+  const handleApplyProductPrediction = () => {
+    if (!productPrediction) return;
+
+    const completedReaction = balanceEquation(productPrediction.equation);
+    setEquationInput(
+      completedReaction.success && completedReaction.balancedEquation
+        ? completedReaction.balancedEquation
+        : productPrediction.equation
+    );
+    setManualMode(false);
+  };
 
   return (
     <div className="simulator-page container">
@@ -331,17 +355,44 @@ export const SimulatorPage: React.FC = () => {
               type="text"
               value={equationInput}
               onChange={e => setEquationInput(e.target.value)}
-              placeholder="Ex: H2 + O2 -> H2O ou CaCO3 -> CaO + CO2"
+              placeholder="Digite só os reagentes: HCl + NaOH"
               className="equation-text-input"
               autoComplete="off"
               spellCheck="false"
               aria-describedby="equation-help"
             />
           </div>
-          <p id="equation-help" className="equation-help">Use + entre substâncias e → entre reagentes e produtos.</p>
+          <p id="equation-help" className="equation-help">
+            Use + entre os reagentes. Quando houver uma previsão segura, o QuimLab sugere e balanceia os produtos.
+          </p>
+
+          {productPrediction && (
+            <aside className="product-prediction" aria-live="polite">
+              <div className="prediction-copy">
+                <span className="prediction-eyebrow">Produtos previstos · {productPrediction.reactionType}</span>
+                <div className="prediction-formulas" aria-label={`Produtos previstos: ${productPrediction.products.join(' mais ')}`}>
+                  {productPrediction.products.map((product, index) => (
+                    <React.Fragment key={product}>
+                      {index > 0 && <span className="prediction-plus">+</span>}
+                      <FormulaDisplay formula={product} showTooltip={false} />
+                    </React.Fragment>
+                  ))}
+                </div>
+                <p>{productPrediction.explanation}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleApplyProductPrediction}
+                className="btn prediction-apply-btn"
+              >
+                <ChevronRight size={18} />
+                <span>Usar produtos e balancear</span>
+              </button>
+            </aside>
+          )}
 
           {/* Mensagem de Erro no Parsing */}
-          {parsedEq && !parsedEq.isValid && (
+          {parsedEq && !parsedEq.isValid && !productPrediction && (
             <div className="parse-error-box">
               <p className="error-message">{parsedEq.error}</p>
             </div>
@@ -358,25 +409,6 @@ export const SimulatorPage: React.FC = () => {
               <Scale size={18} />
               <span>Balancear equação</span>
             </button>
-
-            {productPrediction && (
-              <button
-                onClick={() => {
-                  const completedReaction = balanceEquation(productPrediction.equation);
-                  setEquationInput(
-                    completedReaction.success && completedReaction.balancedEquation
-                      ? completedReaction.balancedEquation
-                      : productPrediction.equation
-                  );
-                  setManualMode(false);
-                }}
-                className="btn btn-secondary"
-                title="Sugere produtos para reações conhecidas; confira se correspondem às condições da reação"
-              >
-                <ChevronRight size={18} />
-                <span>Completar produtos</span>
-              </button>
-            )}
 
             <button
               onClick={() => setShowVisualBuilder(!showVisualBuilder)}

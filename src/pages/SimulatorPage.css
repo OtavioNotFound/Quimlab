@@ -27,6 +27,35 @@
 .lab-workspace .equation-text-input { background: var(--bg-primary); padding: 1rem; font-size: 1.6rem; min-height: 80px; border: 0; }
 .lab-workspace .equation-text-input:focus { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 .equation-help { font-size: 0.875rem; color: var(--text-muted); margin-top: -0.4rem; }
+.product-prediction {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--reaction-field);
+  color: var(--reaction-ink);
+}
+.prediction-copy { display: grid; gap: 0.35rem; min-width: 0; }
+.prediction-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--reaction-muted);
+}
+.prediction-formulas { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; }
+.prediction-formulas .formula-text { color: var(--reaction-ink); font-size: 1.35rem; font-weight: 600; }
+.prediction-plus { color: var(--reaction-muted); }
+.prediction-copy p { margin: 0; max-width: 64ch; color: var(--reaction-muted); font-size: 0.825rem; }
+.prediction-apply-btn {
+  min-height: 44px;
+  border: 0;
+  background: var(--reaction-ink);
+  color: var(--reaction-field);
+  white-space: nowrap;
+}
+.prediction-apply-btn:hover { opacity: 0.88; }
 .lab-workspace .editor-actions-bar { gap: 0.35rem; }
 .lab-workspace .editor-actions-bar > .btn:first-child { flex-basis: 100%; margin-bottom: 0.5rem; min-height: 48px; }
 .lab-workspace .editor-actions-bar .btn-secondary { font-size: 0.875rem; min-height: 40px; padding: 0.5rem 0.65rem; background: var(--bg-primary); border: 0; }
@@ -81,6 +110,8 @@
   .lab-workspace .editor-top-bar { flex-direction: column; align-items: flex-start; }
   .lab-workspace .symbol-btn { min-width: 34px; min-height: 40px; }
   .lab-workspace .equation-text-input { font-size: 1.25rem; }
+  .product-prediction { grid-template-columns: 1fr; }
+  .prediction-apply-btn { width: 100%; }
   .lab-workspace .equation-visual-row { flex-direction: column; gap: 1.25rem; }
   .lab-workspace .equation-arrow-container { transform: rotate(90deg); }
   .lab-workspace .stepper-btn { width: 40px; height: 40px; }

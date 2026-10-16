@@ -9,6 +9,7 @@ const SubstanceCatalogPage = lazy(() => import('./pages/SubstanceCatalogPage').t
 const ReactionGuidePage = lazy(() => import('./pages/ReactionGuidePage').then(page => ({ default: page.ReactionGuidePage })));
 const ChallengesPage = lazy(() => import('./pages/ChallengesPage').then(page => ({ default: page.ChallengesPage })));
 const PeriodicTablePage = lazy(() => import('./pages/PeriodicTablePage').then(page => ({ default: page.PeriodicTablePage })));
+const MoleculeBuilderPage = lazy(() => import('./pages/MoleculeBuilderPage').then(page => ({ default: page.MoleculeBuilderPage })));
 
 const ScrollToPageStart = () => {
   const { pathname } = useLocation();
@@ -46,6 +47,7 @@ export const App: React.FC = () => {
               <Route path="/" element={<SimulatorPage />} />
               <Route path="/periodic-table" element={<PeriodicTablePage />} />
               <Route path="/substances" element={<SubstanceCatalogPage />} />
+              <Route path="/molecules" element={<MoleculeBuilderPage />} />
               <Route path="/reactions" element={<ReactionGuidePage />} />
               <Route path="/challenges" element={<ChallengesPage />} />
               <Route
@@ -73,6 +75,7 @@ export const App: React.FC = () => {
               <Link to="/">Laboratório</Link>
               <Link to="/periodic-table">Tabela periódica</Link>
               <Link to="/substances">Substâncias</Link>
+              <Link to="/molecules">Montar moléculas</Link>
               <Link to="/reactions">Tipos de reação</Link>
               <Link to="/challenges">Desafios</Link>
             </nav>

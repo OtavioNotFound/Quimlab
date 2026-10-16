@@ -28,6 +28,29 @@ describe('QuimLab Chemical Engine', () => {
       expect(predictReactionProducts('C3H8 + O2')?.equation).toBe('C3H8 + O2 -> CO2 + H2O');
     });
 
+    it.each([
+      ['H2SO4 + NaOH', 'H2SO4 + NaOH -> Na2SO4 + H2O'],
+      ['KI + Pb(NO3)2 ->', 'KI + Pb(NO3)2 -> PbI2 + KNO3'],
+      ['KClO3', 'KClO3 -> KCl + O2'],
+      ['C2H5OH + CH3COOH', 'C2H5OH + CH3COOH -> CH3COOC2H5 + H2O'],
+      ['CuSO4 + NaOH', 'CuSO4 + NaOH -> Cu(OH)2 + Na2SO4']
+    ])('prevê e permite balancear a reação %s', (reactants, expectedEquation) => {
+      const prediction = predictReactionProducts(reactants);
+      expect(prediction?.equation).toBe(expectedEquation);
+
+      const balanced = balanceEquation(prediction!.equation);
+      expect(balanced.success).toBe(true);
+      expect(balanced.isConserved).toBe(true);
+    });
+
+    it('reconhece os mesmos reagentes em qualquer ordem', () => {
+      expect(predictReactionProducts('NaOH + HCl')?.products).toEqual(['NaCl', 'H2O']);
+    });
+
+    it('não aplica a regra de combustão a combustível com outro elemento', () => {
+      expect(predictReactionProducts('CH3Cl + O2')).toBeNull();
+    });
+
     it('não inventa produtos para uma reação desconhecida', () => {
       expect(predictReactionProducts('Na + H2O ->')).toBeNull();
     });
@@ -141,6 +164,14 @@ describe('QuimLab Chemical Engine', () => {
       expect(result.success).toBe(true);
       expect(result.isConserved).toBe(true);
     });
+
+    it('deve aceitar participantes sem espaços ao redor do sinal de adição', () => {
+      const equation = parseEquation('HCl+NaOH->NaCl+H2O');
+      expect(equation.isValid).toBe(true);
+      expect(equation.reactants.map(participant => participant.formula)).toEqual(['HCl', 'NaOH']);
+      expect(equation.products.map(participant => participant.formula)).toEqual(['NaCl', 'H2O']);
+      expect(predictReactionProducts('HCl+NaOH')?.products).toEqual(['NaCl', 'H2O']);
+    });
   });
 
   describe('Reaction Classifier', () => {
@@ -199,7 +230,16 @@ describe('QuimLab Chemical Engine', () => {
         expect(substance?.molarMass, formula).toBe(parsed.molarMass);
       }
 
-      expect(SUBSTANCE_CATALOG).toHaveLength(64);
+      expect(SUBSTANCE_CATALOG.length).toBeGreaterThanOrEqual(400);
+
+      const ids = SUBSTANCE_CATALOG.map(substance => substance.id);
+      expect(ids.every(Boolean)).toBe(true);
+      expect(new Set(ids).size).toBe(SUBSTANCE_CATALOG.length);
+
+      const propanolIsomers = SUBSTANCE_CATALOG
+        .filter(substance => substance.formula === 'C3H8O')
+        .map(substance => substance.preferredName);
+      expect(propanolIsomers).toEqual(expect.arrayContaining(['Propan-1-ol', 'Propan-2-ol']));
     });
 
     it('deve localizar substâncias conhecidas por fórmula e composição', () => {

@@ -167,18 +167,15 @@ function splitPlusSigns(str: string): string[] {
       inParen = Math.max(0, inParen - 1);
       current += ch;
     } else if (ch === '+' && inParen === 0) {
-      // Checa se é carga no final de uma fórmula (ex: Na+ ou Fe2+) sem espaço posterior
-      const prevChar = i > 0 ? str[i - 1] : '';
+      const nextNonSpace = str.slice(i + 1).match(/\S/)?.[0];
+      const isPositiveCharge = nextNonSpace === undefined || nextNonSpace === '+';
 
-      // O sinal de carga positiva pode ser seguido por espaço antes do operador real.
-      const isSeparator = /\s/.test(prevChar) || i === 0 || i === str.length - 1;
-      if (isSeparator) {
+      if (isPositiveCharge) {
+        current += ch;
+      } else {
         tokens.push(current);
         current = '';
-        continue;
       }
-
-      current += ch;
     } else {
       current += ch;
     }

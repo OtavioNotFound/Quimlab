@@ -1,12 +1,33 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { SUBSTANCE_CATALOG } from '../chemistry/substanceCatalog';
 import { SubstanceDetailCard } from '../components/SubstanceDetailCard';
 import { Search, Filter } from 'lucide-react';
 import './SubstanceCatalogPage.css';
 
+const ORGANIC_TYPE_KEYWORDS = [
+  'orgânic',
+  'hidrocarboneto',
+  'álcool',
+  'aldeído',
+  'cetona',
+  'éter',
+  'éster',
+  'amina',
+  'amida',
+  'fenol',
+  'carboidrato',
+  'aminoácido',
+  'alcaloide',
+  'ácido carboxílico',
+  'heterocíclico',
+  'diol',
+  'triol'
+];
+
 export const SubstanceCatalogPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<string>('todos');
+  const [visibleCount, setVisibleCount] = useState(60);
 
   const filters = [
     { id: 'todos', label: 'Todas as Substâncias' },
@@ -28,7 +49,7 @@ export const SubstanceCatalogPage: React.FC = () => {
         if (selectedFilter === 'sal' && !typeLower.includes('sal')) return false;
         if (selectedFilter === 'óxido' && !typeLower.includes('óxid')) return false;
         if (selectedFilter === 'simples' && !typeLower.includes('simples')) return false;
-        if (selectedFilter === 'orgânico' && !typeLower.includes('orgânic') && !typeLower.includes('hidrocarboneto') && !typeLower.includes('álcool')) return false;
+        if (selectedFilter === 'orgânico' && !ORGANIC_TYPE_KEYWORDS.some(keyword => typeLower.includes(keyword))) return false;
       }
 
       // Filtro de busca textual
@@ -43,6 +64,12 @@ export const SubstanceCatalogPage: React.FC = () => {
       );
     });
   }, [searchQuery, selectedFilter]);
+
+  useEffect(() => {
+    setVisibleCount(60);
+  }, [searchQuery, selectedFilter]);
+
+  const visibleSubstances = filteredSubstances.slice(0, visibleCount);
 
   return (
     <div className="substance-catalog-page container">
@@ -86,18 +113,30 @@ export const SubstanceCatalogPage: React.FC = () => {
       </div>
 
       <div className="catalog-results-header">
-        <span>Exibindo <strong>{filteredSubstances.length}</strong> substância(s)</span>
+        <span>
+          Exibindo <strong>{visibleSubstances.length}</strong> de <strong>{filteredSubstances.length}</strong> substâncias
+        </span>
       </div>
 
       <div className="catalog-grid">
-        {filteredSubstances.map(sub => (
+        {visibleSubstances.map(sub => (
           <SubstanceDetailCard
-            key={sub.formula}
+            key={sub.id ?? `${sub.formula}-${sub.preferredName}`}
             formula={sub.formula}
             catalogData={sub}
           />
         ))}
       </div>
+
+      {visibleCount < filteredSubstances.length && (
+        <button
+          type="button"
+          className="btn btn-secondary catalog-load-more"
+          onClick={() => setVisibleCount(count => count + 60)}
+        >
+          Mostrar mais substâncias
+        </button>
+      )}
     </div>
   );
 };

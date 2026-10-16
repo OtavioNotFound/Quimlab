@@ -15,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
     { to: '/', label: 'Laboratório' },
     { to: '/periodic-table', label: 'Tabela periódica' },
     { to: '/substances', label: 'Substâncias' },
+    { to: '/molecules', label: 'Moléculas' },
     { to: '/reactions', label: 'Tipos de reação' },
     { to: '/challenges', label: 'Desafios' }
   ];

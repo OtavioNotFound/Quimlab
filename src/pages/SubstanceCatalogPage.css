@@ -106,3 +106,4 @@
 .catalog-grid .substance-detail-card { padding: 1.5rem; }
 .catalog-grid .substance-detail-card:nth-child(odd) { background: var(--bg-secondary); }
 .catalog-grid .substance-card-formula { font-size: 2.5rem; }
+.catalog-load-more { align-self: center; min-width: min(100%, 22rem); margin-top: 1.5rem; }

@@ -1,5 +1,6 @@
 import { CatalogSubstance } from './types';
 import { parseFormula } from './formulaParser';
+import { REFERENCE_SUBSTANCES } from './referenceSubstances';
 
 function createCatalogSubstance(
   formula: string,
@@ -26,7 +27,7 @@ function createCatalogSubstance(
  * Catálogo de substâncias químicas validadas com nomenclatura oficial (IUPAC),
  * nomes usuais/populares, massas molares e descrições didáticas em português.
  */
-export const SUBSTANCE_CATALOG: CatalogSubstance[] = [
+const CORE_SUBSTANCE_CATALOG: CatalogSubstance[] = [
   {
     formula: 'H2O',
     preferredName: 'Água',
@@ -578,6 +579,17 @@ export const SUBSTANCE_CATALOG: CatalogSubstance[] = [
     'NaF', 'Fluoreto de sódio', ['Fluoreto sódico'],
     'Sal solúvel usado em produtos odontológicos para ajudar na prevenção de cáries.',
     'Sal halogenado', { stateStandard: 's', solubilityInWater: 'soluble' }
+  )
+];
+
+const coreKeys = new Set(
+  CORE_SUBSTANCE_CATALOG.map(substance => `${substance.formula.toLowerCase()}|${substance.preferredName.toLowerCase()}`)
+);
+
+export const SUBSTANCE_CATALOG: CatalogSubstance[] = [
+  ...CORE_SUBSTANCE_CATALOG.map((substance, index) => ({ ...substance, id: substance.id ?? `core-${index}-${substance.formula}` })),
+  ...REFERENCE_SUBSTANCES.filter(substance =>
+    !coreKeys.has(`${substance.formula.toLowerCase()}|${substance.preferredName.toLowerCase()}`)
   )
 ];
 
