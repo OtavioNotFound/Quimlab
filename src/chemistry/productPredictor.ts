@@ -5,10 +5,11 @@ import { SubstanceParticipant } from './types';
 export interface ProductPrediction {
   equation: string;
   products: string[];
-  source: 'preset' | 'reaction-library' | 'combustion-rule';
+  source: 'preset' | 'reaction-library' | 'combustion-rule' | 'neutralization-rule';
   reactionType: string;
   explanation: string;
   confidence: 'high' | 'medium';
+  assumptions: string[];
 }
 
 interface KnownProductRule {
@@ -117,6 +118,12 @@ export function predictReactionProducts(input: string): ProductPrediction | null
     );
   }
 
+  const neutralization = predictNeutralization(parsedInput.reactants);
+  if (neutralization) {
+    return buildPrediction(reactantSide, neutralization, 'neutralization-rule', 'Neutralização total',
+      'Um ácido e um hidróxido formam sal e água. A sugestão considera neutralização total; proporções parciais podem formar outros sais.', 'medium');
+  }
+
   const oxygen = parsedInput.reactants.find(participant => participant.parsed.cleanFormula === 'O2');
   const fuel = parsedInput.reactants.find(participant => {
     const elements = Object.keys(participant.parsed.elements);
@@ -167,7 +174,8 @@ function buildPrediction(
     source,
     reactionType,
     explanation,
-    confidence
+    confidence,
+    assumptions: predictionAssumptions(reactionType, explanation)
   };
 }
 
@@ -186,4 +194,42 @@ function getFormulaKey(participants: SubstanceParticipant[]): string {
 
 function getStringFormulaKey(formulas: string[]): string {
   return [...formulas].sort().join('|');
+}
+
+// Only a bounded set of conventional acids and hydroxides is supported.
+const ACIDS: Record<string, { anion: string; charge: number }> = {
+  HCl: { anion: 'Cl', charge: 1 }, HBr: { anion: 'Br', charge: 1 }, HI: { anion: 'I', charge: 1 },
+  HNO3: { anion: 'NO3', charge: 1 }, H2SO4: { anion: 'SO4', charge: 2 },
+  H3PO4: { anion: 'PO4', charge: 3 }, CH3COOH: { anion: 'CH3COO', charge: 1 }
+};
+const BASES: Record<string, { cation: string; charge: number }> = {
+  LiOH: { cation: 'Li', charge: 1 }, NaOH: { cation: 'Na', charge: 1 }, KOH: { cation: 'K', charge: 1 },
+  'Mg(OH)2': { cation: 'Mg', charge: 2 }, 'Ca(OH)2': { cation: 'Ca', charge: 2 },
+  'Ba(OH)2': { cation: 'Ba', charge: 2 }, 'Al(OH)3': { cation: 'Al', charge: 3 }
+};
+
+function predictNeutralization(reactants: SubstanceParticipant[]): string[] | null {
+  if (reactants.length !== 2 || reactants.some(item => item.parsed.charge || (item.parsed.state && item.parsed.state !== 'aq'))) return null;
+  const acid = reactants.map(item => ACIDS[item.parsed.cleanFormula]).find(Boolean);
+  const base = reactants.map(item => BASES[item.parsed.cleanFormula]).find(Boolean);
+  if (!acid || !base) return null;
+  let divisor = acid.charge;
+  let remainder = base.charge;
+  while (remainder) [divisor, remainder] = [remainder, divisor % remainder];
+  const cations = acid.charge / divisor;
+  const anions = base.charge / divisor;
+  const cationPart = base.cation + (cations > 1 ? cations : '');
+  const polyatomic = /[0-9]|[A-Z].*[A-Z]/.test(acid.anion);
+  const anionPart = anions > 1 ? `${polyatomic ? `(${acid.anion})` : acid.anion}${anions}` : acid.anion;
+  return [cationPart + anionPart, 'H2O'];
+}
+
+function predictionAssumptions(reactionType: string, explanation: string): string[] {
+  const text = `${reactionType} ${explanation}`.toLowerCase();
+  if (text.includes('neutraliza')) return ['Neutralização total em meio aquoso; considerar a proporção ácido/base.'];
+  if (text.includes('combust')) return ['Combustão completa com oxigênio suficiente.'];
+  if (text.includes('eletrólise') || text.includes('eletról')) return ['Requer fornecimento de energia elétrica.'];
+  if (text.includes('precipita')) return ['Mistura aquosa; solubilidade depende das condições do meio.'];
+  if (text.includes('aquec') || text.includes('térmica')) return ['Requer aquecimento nas condições da reação descrita.'];
+  return ['Condições experimentais não informadas; a sugestão não confirma a ocorrência da reação.'];
 }

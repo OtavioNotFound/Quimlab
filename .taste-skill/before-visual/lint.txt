@@ -1,0 +1,45 @@
+TASTESKILL · LINT   60 file(s)
+
+FAIL
+  [purple] Indigo / violet — the generated-page accent.  (4×)
+      src/components/MolecularViewer.tsx:25  #a855f7
+      src/components/MolecularViewer.tsx:26  #8b5cf6
+      src/components/MolecularViewer.tsx:27  #7c3aed
+      src/pages/PeriodicTablePage.tsx:15  #a855f7
+  [emoji] Emoji used as UI.  (1×)
+      src/pages/SimulatorPage.tsx:844  ➔
+
+WARN
+  [shadow] Shadow. Elements at rest carry none; only real overlays (menu, dialog, sticky bar) may.  (8×)
+      src/components/AtomCounterTable.css:10  box-shadow:
+      src/components/MolecularViewer.css:81  box-shadow:
+      src/components/MolecularViewer.css:182  box-shadow:
+      src/components/PeriodicTableModal.css:68  box-shadow:
+      src/components/StoichiometryCalculator.css:149  box-shadow:
+      src/pages/MoleculeBuilderPage.css:190  drop-shadow(
+      … 2 more
+  [mono] Monospace type. Only literal code may be monospace.  (35×)
+      src/components/MolecularViewer.css:72  font-family: var(--font-mono
+      src/components/MolecularViewer.css:143  font-family: var(--font-mono
+      src/components/MolecularViewer.css:176  font-family: var(--font-mono
+      src/components/MolecularViewer.css:232  font-family: var(--font-mono
+      src/components/PeriodicTableModal.css:77  font-family: var(--font-mono
+      src/components/PeriodicTableModal.css:83  font-family: var(--font-mono
+      … 29 more
+  [framework-colour] A framework default colour (Tailwind blue, green, red, amber). Take the accent and status colours from the dealt style.  (7×)
+      src/components/MolecularViewer.tsx:14  #2563eb
+      src/components/MolecularViewer.tsx:15  #ef4444
+      src/components/MolecularViewer.tsx:16  #22c55e
+      src/pages/PeriodicTablePage.tsx:9  #ef4444
+      src/pages/PeriodicTablePage.tsx:12  #22c55e
+      src/pages/PeriodicTablePage.tsx:14  #3b82f6
+      … 1 more
+  [transition-all] transition: all. Name the properties (transform, opacity).  (2×)
+      src/components/VisualEquationBuilder.css:35  transition: all
+      src/components/VisualEquationBuilder.css:295  transition: all
+  [eyebrow] Eyebrow / kicker label above a heading.  (2×)
+      src/pages/MoleculeBuilderPage.tsx:170  className="molecule-kicker
+      src/pages/SimulatorPage.tsx:372  className="prediction-eyebrow
+
+RESULT: 5 FAIL, 54 WARN — fix the FAILs before rendering.
+Interface fragments marked data-ui keep their own borders and shadows. Any other line that must keep a flagged pattern for a real reason can carry the comment taste-skill-ignore.

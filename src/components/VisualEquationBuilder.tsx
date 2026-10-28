@@ -5,6 +5,7 @@ import { parseEquation } from '../chemistry/equationParser';
 import { predictReactionProducts } from '../chemistry/productPredictor';
 import { Plus, Trash2, ArrowRight, X, Search } from 'lucide-react';
 import './VisualEquationBuilder.css';
+import { FormulaAutocomplete } from './FormulaAutocomplete';
 
 export interface ParticipantItem {
   formula: string;
@@ -209,11 +210,12 @@ export const VisualEquationBuilder: React.FC<VisualEquationBuilderProps> = ({
             Adicionar a: <strong className="target-side-badge">{targetSide === 'reactants' ? 'Reagentes' : 'Produtos'}</strong>
           </span>
           <div className="custom-input-box">
-            <input
+            <FormulaAutocomplete
               type="text"
-              placeholder="Digitar fórmula customizada (ex: KMnO4)..."
+              aria-label="Substância para adicionar"
+              placeholder="Fórmula ou nome da substância…"
               value={customInput}
-              onChange={e => setCustomInput(e.target.value)}
+              onValueChange={setCustomInput}
               onKeyDown={e => {
                 if (e.key === 'Enter') handleAddSubstance(customInput, targetSide);
               }}

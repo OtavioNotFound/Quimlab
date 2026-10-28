@@ -1,0 +1,567 @@
+{
+ "url": "http://127.0.0.1:5173",
+ "at": "2026-10-28T11:25:13.032Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.9,
+    0.94,
+    0.72,
+    0.52
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 3122,
+     "screens": 3.7,
+     "words": 459,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 30,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Balancear equações",
+     "words": 2,
+     "chars": 18,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Jost",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.2,
+     "top": 76,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Balancear equações",
+     "words": 2,
+     "lines": 1,
+     "size": 24,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "QuimLab",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bodoni Moda",
+      "weight": 600,
+      "tracking": -0.05,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 9,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Balancear equações",
+      "words": 2,
+      "chars": 18,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Jost",
+      "weight": 500,
+      "tracking": -0.03,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.51,
+      "top": 76,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "→",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.05,
+      "top": 622,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.04,
+      "top": 624,
+      "tag": "span",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 4,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 0.99,
+       "mono": false
+      },
+      {
+       "family": "Bodoni Moda",
+       "share": 0.01,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      19,
+      20,
+      22,
+      24
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 14,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 8.3
+     },
+     "measureChars": 51,
+     "max": {
+      "size": 24,
+      "vw": 6.2,
+      "font": "Bodoni Moda",
+      "text": "QuimLab"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.09,
+     "smallText": 14
+    },
+    "eyebrows": [
+     {
+      "text": "Equilibrada",
+      "above": "→",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 567
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f0f3ef",
+     "bodyBgHsl": {
+      "h": 105,
+      "s": 0.14,
+      "l": 0.95
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 56,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f4f7f2",
+       "top": 550,
+       "hsl": {
+        "h": 96,
+        "s": 0.24,
+        "l": 0.96
+       }
+      },
+      {
+       "color": "#f0f3ef",
+       "top": 2219,
+       "hsl": {
+        "h": 105,
+        "s": 0.14,
+        "l": 0.95
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#455147",
+       "share": 0.33
+      },
+      {
+       "color": "#5c685e",
+       "share": 0.24
+      },
+      {
+       "color": "#4c6152",
+       "share": 0.22
+      },
+      {
+       "color": "#202a23",
+       "share": 0.1
+      },
+      {
+       "color": "#25392c",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#f0f3ef",
+      "hsl": {
+       "h": 105,
+       "s": 0.14,
+       "l": 0.95
+      },
+      "fg": "#455147"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 10,
+     "inHero": 10,
+     "radius": 6,
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Pular para o conteúdo principal",
+      "Balancear equação",
+      "Resultado"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 4,
+     "hairlineSamples": [
+      "div.equation-visual-row 324px",
+      "div.particle-conservation 324px",
+      "details.classification-block 324px",
+      "div.tabs-navigation-bar 358px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 7,
+     "boxRadius": 12,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "bodoni moda",
+     "jost"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 3122,
+    "margins": {
+     "left": 16,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "div.lab-workspace",
+      "tag": "div",
+      "top": 176,
+      "height": 1123,
+      "words": 111,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "O equilíbrio da reação",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 33,
+      "textLeft": 33,
+      "textRight": 33,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.didactic-tabs-container",
+      "tag": "section",
+      "top": 1318,
+      "height": 1685,
+      "words": 240,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Contagem e Conservação de Átomos",
+       "size": 16,
+       "tag": "h3"
+      },
+      "left": 16,
+      "right": 21,
+      "textLeft": 16,
+      "textRight": 21,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Balancear equações",
+      "size": 24,
+      "top": 76,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 32,
+      "n": 8
+     },
+     {
+      "x": 16,
+      "n": 7
+     }
+    ],
+    "leftBlocks": 15,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#f0f3ef",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": 16,
+     "right": 30
+    },
+    "hero": {
+     "text": "Balancear equações",
+     "words": 2,
+     "chars": 18,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Jost",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.2,
+     "top": 76,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 6,
+     "firstScreen": 2,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 8,
+     "radii": [
+      [
+       12,
+       6
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       6,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 4,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": {
+     "count": 2,
+     "median": 55
+    },
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.25,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      16,
+      20,
+      22,
+      24
+     ]
+    },
+    "title": {
+     "text": "Balancear equações",
+     "size": 24,
+     "top": 76
+    },
+    "colourShare": 0
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "/home/otavionotfound/.codes/67/Quimlab/.taste-skill/animated-reduced/mobile-fold.jpg",
+   "pages": [
+    "/home/otavionotfound/.codes/67/Quimlab/.taste-skill/animated-reduced/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

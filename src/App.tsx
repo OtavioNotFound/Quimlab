@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import { Navbar } from './components/Navbar';
 import './styles/global.css';
 import './App.css';
+import './styles/workbench.css';
 
 const SimulatorPage = lazy(() => import('./pages/SimulatorPage').then(page => ({ default: page.SimulatorPage })));
 const SubstanceCatalogPage = lazy(() => import('./pages/SubstanceCatalogPage').then(page => ({ default: page.SubstanceCatalogPage })));

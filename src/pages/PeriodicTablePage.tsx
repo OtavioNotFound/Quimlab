@@ -18,6 +18,8 @@ const CATEGORY_COLORS: Record<string, { label: string; bg: string; text: string;
   actinide: { label: 'Actinídeos', bg: 'rgba(217, 70, 239, 0.15)', text: '#d946ef', border: '#e879f9' }
 };
 
+const normalizeElementSearch = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
 export const PeriodicTablePage: React.FC = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -30,9 +32,9 @@ export const PeriodicTablePage: React.FC = () => {
     return elements.filter(el => {
       if (selectedCategory !== 'all' && el.category !== selectedCategory) return false;
       if (!search.trim()) return true;
-      const q = search.toLowerCase().trim();
+      const q = normalizeElementSearch(search);
       return (
-        el.name.toLowerCase().includes(q) ||
+        normalizeElementSearch(el.name).includes(q) ||
         el.symbol.toLowerCase().includes(q) ||
         el.atomicNumber.toString() === q
       );
@@ -64,8 +66,15 @@ export const PeriodicTablePage: React.FC = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="periodic-search-input"
+              list="element-suggestions"
+              autoComplete="off"
               aria-label="Pesquisar elementos"
             />
+            <datalist id="element-suggestions">
+              {(search.trim() ? filteredElements.slice(0, 6) : []).map(element => (
+                <option key={element.symbol} value={element.name}>{element.symbol} · {element.atomicNumber}</option>
+              ))}
+            </datalist>
           </div>
           {search && (
             <button onClick={() => setSearch('')} className="btn btn-secondary btn-sm">

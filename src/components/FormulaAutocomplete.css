@@ -1,0 +1,10 @@
+.formula-autocomplete { position: relative; min-width: 0; width: 100%; }
+.formula-autocomplete input { width: 100%; }
+.formula-suggestions-panel { position: absolute; top: calc(100% + 6px); left: 0; width: max(100%, 280px); max-width: min(420px, calc(100vw - 66px)); z-index: 45; padding: 6px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); box-shadow: 0 8px 24px rgb(0 0 0 / 12%); }
+.formula-suggestions-help { display: flex; justify-content: space-between; gap: 8px; padding: 8px; font-size: 11px; color: var(--text-muted); }
+.formula-suggestions-help > span { white-space: nowrap; }
+.formula-suggestions-panel ul { list-style: none; padding: 0; margin: 0; max-height: 264px; overflow-y: auto; overscroll-behavior: contain; }
+.formula-suggestions-panel li { display: grid; grid-template-columns: minmax(56px, auto) 1fr 14px; gap: 10px; align-items: center; padding: 10px 8px; min-height: 44px; border-radius: 4px; cursor: pointer; }
+.formula-suggestions-panel li[aria-selected='true'], .formula-suggestions-panel li:hover { background: var(--bg-tertiary); }
+.formula-suggestions-panel strong { font-size: 15px; font-weight: 500; }
+.formula-suggestions-panel li > span { font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }

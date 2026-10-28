@@ -1,0 +1,62 @@
+.reaction-particles { width: 100%; min-width: 0; color: var(--text-primary); }
+.particle-toolbar, .particle-conservation-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.particle-toolbar h3, .particle-conservation h3 { font: 600 14px var(--font-sans); letter-spacing: 0; }
+.particle-view-switch { display: flex; padding: 3px; border-radius: 6px; background: var(--bg-tertiary); }
+.particle-view-switch button { min-height: 32px; padding: 4px 12px; font-size: 12px; border-radius: 4px; color: var(--text-secondary); }
+.particle-view-switch button[aria-pressed='true'] { background: var(--bg-secondary); color: var(--text-primary); }
+.particle-stage { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr); align-items: center; gap: 16px; padding: 20px 0 16px; }
+.particle-side { min-width: 0; align-self: stretch; display: flex; flex-direction: column; gap: 4px; }
+.particle-side-label { font-size: 12px; color: var(--text-muted); text-align: center; }
+.particle-compounds { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; flex: 1; gap: 8px; }
+.particle-compound { flex: 0 1 128px; text-align: center; min-width: 80px; }
+.particle-compound svg { display: block; width: 100%; max-height: 116px; }
+.particle-formula { font-size: 16px; font-weight: 600; white-space: nowrap; }
+.particle-formula span { color: var(--text-muted); font-size: 12px; font-weight: 400; }
+.particle-compound small { font-size: 11px; color: var(--text-muted); }
+.particle-arrow { color: var(--text-muted); }
+.particle-caption { font-size: 12px; line-height: 1.5; color: var(--text-muted); max-width: 65ch; }
+.particle-conservation { border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px; }
+.particle-conservation-heading { align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
+.particle-conservation-heading > span { font-size: 12px; }
+.atoms-conserved { color: var(--success-text); }
+.atoms-unbalanced { color: var(--warning-text); }
+.atom-comparisons { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; margin-top: 14px; }
+.atom-comparison { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px; }
+.comparison-identity { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.element-dot { width: 9px; height: 9px; border: 1px solid; border-radius: 50%; flex: none; }
+.comparison-figures { display: flex; align-items: center; gap: 6px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.comparison-figures strong { font-weight: 500; }
+.comparison-bars { display: grid; gap: 4px; grid-column: 1 / -1; }
+.comparison-bars span { height: 4px; background: var(--accent-primary); border-radius: 2px; }
+.comparison-bars span:last-child { background: var(--text-muted); }
+.comparison-key { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+@media (max-width: 600px) {
+  .particle-stage { gap: 6px; grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr); }
+  .particle-compound { flex-basis: 96px; }
+  .particle-view-switch button { min-height: 44px; }
+  .atom-comparisons { gap: 16px; }
+}
+/* Motion is a composition aid requested for the laboratory; it does not simulate reaction kinetics. */
+.particle-motion-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 12px; color: var(--text-muted); }
+.particle-motion-bar button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 12px; }
+.particle-motion-bar button:hover { background: var(--bg-tertiary); }
+.moving-atom { transform-box: fill-box; transform-origin: center; transition: opacity 180ms ease; }
+.moving-atom.atom-dimmed { opacity: 0.18; }
+.particle-conservation .comparison-identity { min-height: 32px; padding: 3px 0; text-align: left; border-radius: 4px; color: inherit; }
+.particle-conservation .comparison-identity:hover, .particle-conservation .comparison-identity[aria-pressed='true'] { text-decoration: underline; text-underline-offset: 4px; }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes atom-drift {
+    0%, 100% { transform: translate(-2px, 2px) rotate(-3deg); }
+    35% { transform: translate(3px, -4px) rotate(3deg); }
+    70% { transform: translate(-3px, -1px) rotate(-1deg); }
+  }
+  .moving-atom { animation: atom-drift var(--atom-duration, 4s) ease-in-out var(--atom-delay, 0s) infinite; }
+  .reaction-particles[data-paused='true'] .moving-atom { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .particle-motion-bar { display: none; }
+  .moving-atom { animation: none; transition: none; }
+}
+@media (max-width: 600px) {
+  .particle-motion-bar button, .particle-conservation .comparison-identity { min-height: 44px; }
+}

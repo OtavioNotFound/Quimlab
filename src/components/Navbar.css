@@ -1,28 +1,29 @@
-
-.masthead { position: sticky; top: 0; z-index: var(--z-nav); background: var(--bg-secondary); }
-.masthead-inner { display: flex; align-items: center; gap: 3rem; min-height: 88px; }
-.masthead-top { display: contents; }
-.wordmark { display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0; }
-.wordmark-name { font-family: var(--font-display); font-size: 2rem; font-weight: 500; letter-spacing: -0.06em; }
-.wordmark-icon { color: var(--text-primary); }
-.masthead-nav { display: flex; align-items: center; gap: 1.5rem; flex: 1; }
-.nav-link { position: relative; color: var(--text-secondary); font-size: 0.95rem; padding: 0.65rem 0; white-space: nowrap; }
-.nav-link:hover, .nav-link.active { color: var(--text-primary); }
-.nav-link::after { content: ''; position: absolute; bottom: 3px; left: 0; width: 100%; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; }
-.nav-link.active::after, .nav-link:hover::after, .nav-link:focus-visible::after { transform: scaleX(1); }
-@media (prefers-reduced-motion: no-preference) {
-  .nav-link::after { transition: transform 300ms var(--motion-ease); }
-}
-.theme-toggle-btn { order: 3; display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 0.8rem; min-height: 44px; background: var(--bg-primary); font-size: 0.875rem; }
-.theme-toggle-btn:hover { background: var(--bg-tertiary); }
+.masthead { position: fixed; inset: 0 auto 0 0; width: 220px; z-index: var(--z-nav); background: var(--bg-primary); }
+.masthead-inner { display: flex; flex-direction: column; height: 100%; padding: 28px 16px 20px; }
+.masthead-top { display: flex; align-items: center; justify-content: space-between; }
+.wordmark { display: flex; align-items: center; gap: 8px; padding: 0 12px; }
+.wordmark-name { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.05em; }
+.wordmark-icon { color: var(--accent-primary); }
+.nav-context { font-size: 12px; color: var(--text-muted); margin: 4px 12px 32px; }
+.masthead-nav { display: flex; flex-direction: column; gap: 5px; }
+.nav-link { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border-radius: 6px; font-size: 14px; color: var(--text-secondary); }
+.nav-link:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+.nav-link.active { background: var(--bg-tertiary); color: var(--text-primary); font-weight: 600; }
+.sidebar-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 20px; padding: 28px 12px 0; }
+.sidebar-study { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--text-muted); }
+.sidebar-study strong { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.theme-toggle-btn { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 13px; }
+.sidebar-footnote { font-size: 11px; color: var(--text-muted); }
+.mobile-menu-toggle { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; }
 @media (max-width: 1100px) {
-  .masthead-inner { gap: 1.5rem; }
-  .masthead-nav { gap: 1rem; }
-}
-@media (max-width: 900px) {
-  .masthead-inner { flex-wrap: wrap; gap: 0; padding-top: 0.75rem; padding-bottom: 0.5rem; }
-  .wordmark { flex: 1; }
-  .theme-toggle-btn { order: 0; }
-  .masthead-nav { flex-basis: 100%; flex-wrap: wrap; gap: 0 1.25rem; margin-top: 0.4rem; }
-  .nav-link { font-size: 0.875rem; min-height: 42px; }
+  .masthead { position: sticky; inset: auto; top: 0; width: 100%; }
+  .masthead-inner { padding: 4px 16px; height: auto; }
+  .masthead-top { min-height: 48px; }
+  .wordmark { padding: 0; }
+  .wordmark-name { font-size: 24px; }
+  .mobile-menu-toggle { display: flex; }
+  .masthead-nav, .nav-context, .sidebar-bottom { display: none; }
+  .menu-open .masthead-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px 0; }
+  .menu-open .sidebar-bottom { display: flex; margin: 0; padding: 0 12px 12px; }
+  .menu-open .sidebar-study, .menu-open .sidebar-footnote { display: none; }
 }

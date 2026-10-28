@@ -43,18 +43,20 @@ export const SubstanceDetailCard: React.FC<SubstanceDetailCardProps> = ({
       <div className="substance-card-content">
         <h3 className="substance-card-title">{preferredName}</h3>
 
-        {commonNames.length > 0 && (
-          <p className="substance-common-names">
-            <span>Também conhecido como:</span> {commonNames.join(', ')}
-          </p>
-        )}
-
         <div className="substance-meta-line">
           <span>{substanceType}</span>
           {molarMass && (
             <span>{molarMass.toFixed(2)} g/mol</span>
           )}
         </div>
+
+        <details className="substance-more"><summary>Detalhes</summary>
+        {commonNames.length > 0 && (
+          <p className="substance-common-names">
+            <span>Também conhecido como:</span> {commonNames.join(', ')}
+          </p>
+        )}
+
 
         <p className="substance-description">{description}</p>
 
@@ -68,6 +70,7 @@ export const SubstanceDetailCard: React.FC<SubstanceDetailCardProps> = ({
             ))}
           </div>
         </div>
+        </details>
       </div>
     </article>
   );

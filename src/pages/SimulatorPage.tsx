@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   parseEquation,
   balanceEquation,
@@ -17,6 +17,9 @@ import { SubstanceDetailCard } from '../components/SubstanceDetailCard';
 import { FormulaDisplay } from '../components/FormulaDisplay';
 import { VisualEquationBuilder, ParticipantItem } from '../components/VisualEquationBuilder';
 import { MolecularViewer } from '../components/MolecularViewer';
+import { ReactionParticles } from '../components/ReactionParticles';
+import { FormulaAutocomplete } from '../components/FormulaAutocomplete';
+import { suggestCompoundAssembly, isFormalCompoundAssembly } from '../chemistry/compoundAssembly';
 import { StoichiometryCalculator } from '../components/StoichiometryCalculator';
 import { RedoxPanel } from '../components/RedoxPanel';
 import { PeriodicTableModal } from '../components/PeriodicTableModal';
@@ -81,7 +84,7 @@ export const SimulatorPage: React.FC = () => {
     products: [1]
   });
   const [manualFeedback, setManualFeedback] = useState<string | null>(null);
-  const [selectedPreset, setSelectedPreset] = useState<string>('synthesis-water');
+  const [selectedPreset, setSelectedPreset] = useState<string>(() => PRESET_REACTIONS.find(preset => preset.unbalanced === equationInput)?.id ?? '');
 
   // Abas de navegação didática
   const [activeTab, setActiveTab] = useState<SimulatorTab>('details');
@@ -288,6 +291,19 @@ export const SimulatorPage: React.FC = () => {
     : null;
 
   const productPrediction = predictReactionProducts(equationInput);
+  const compoundAssembly = productPrediction ? null : suggestCompoundAssembly(equationInput);
+  const formalAssembly = isFormalCompoundAssembly(equationInput);
+  const completionEquation = productPrediction?.equation ?? compoundAssembly?.equation;
+  const completionPreview = useMemo(() => {
+    if (!completionEquation) return null;
+    const balanced = balanceEquation(completionEquation);
+    return parseEquation(balanced.balancedEquation ?? completionEquation);
+  }, [completionEquation]);
+  const handleApplyCompoundAssembly = () => {
+    if (!compoundAssembly) return;
+    setEquationInput(compoundAssembly.equation);
+    setManualMode(false);
+  };
   const handleApplyProductPrediction = () => {
     if (!productPrediction) return;
 
@@ -306,15 +322,13 @@ export const SimulatorPage: React.FC = () => {
         <div>
           <h1 className="simulator-title">Balancear equações</h1>
         </div>
-        <p className="simulator-subtitle">
-          Toda reação tem uma proporção. Explore os reagentes, encontre o equilíbrio e veja o que se conserva.
-        </p>
       </header>
 
       <div className="lab-workspace">
         <section className="editor-card" aria-label="Editor de reação">
+          <h2 className="editor-heading">Reação</h2>
           <div className="preset-picker">
-            <label htmlFor="reaction-example">Comece por um exemplo</label>
+            <label htmlFor="reaction-example">Exemplo</label>
             <select
               id="reaction-example"
               value={selectedPreset}
@@ -323,6 +337,7 @@ export const SimulatorPage: React.FC = () => {
                 if (preset) handleApplyPreset(preset);
               }}
             >
+              <option value="" disabled>Escolha uma reação</option>
               {PRESET_REACTIONS.map(preset => (
                 <option key={preset.id} value={preset.id}>{preset.name}</option>
               ))}
@@ -332,7 +347,7 @@ export const SimulatorPage: React.FC = () => {
           {/* Editor Principal da Equação */}
           <div className="editor-top-bar">
             <label htmlFor="equation-input" className="editor-label">
-              Sua equação
+              Equação
             </label>
             <div className="quick-symbols">
               <span className="symbols-label">Inserir:</span>
@@ -350,49 +365,25 @@ export const SimulatorPage: React.FC = () => {
           </div>
 
           <div className="input-wrapper">
-            <input
+            <FormulaAutocomplete
+              equation
               id="equation-input"
               type="text"
               value={equationInput}
-              onChange={e => setEquationInput(e.target.value)}
-              placeholder="Digite só os reagentes: HCl + NaOH"
+              onValueChange={value => { setEquationInput(value); setSelectedPreset(''); }}
+              placeholder="Fórmula ou nome: H2O, água…"
               className="equation-text-input"
               autoComplete="off"
               spellCheck="false"
               aria-describedby="equation-help"
             />
           </div>
-          <p id="equation-help" className="equation-help">
-            Use + entre os reagentes. Quando houver uma previsão segura, o QuimLab sugere e balanceia os produtos.
-          </p>
 
-          {productPrediction && (
-            <aside className="product-prediction" aria-live="polite">
-              <div className="prediction-copy">
-                <span className="prediction-eyebrow">Produtos previstos · {productPrediction.reactionType}</span>
-                <div className="prediction-formulas" aria-label={`Produtos previstos: ${productPrediction.products.join(' mais ')}`}>
-                  {productPrediction.products.map((product, index) => (
-                    <React.Fragment key={product}>
-                      {index > 0 && <span className="prediction-plus">+</span>}
-                      <FormulaDisplay formula={product} showTooltip={false} />
-                    </React.Fragment>
-                  ))}
-                </div>
-                <p>{productPrediction.explanation}</p>
-              </div>
-              <button
-                type="button"
-                onClick={handleApplyProductPrediction}
-                className="btn prediction-apply-btn"
-              >
-                <ChevronRight size={18} />
-                <span>Usar produtos e balancear</span>
-              </button>
-            </aside>
-          )}
+
+          {formalAssembly && <p className="formal-assembly-notice" role="note">Montagem formal. Não confirma reação real.</p>}
 
           {/* Mensagem de Erro no Parsing */}
-          {parsedEq && !parsedEq.isValid && !productPrediction && (
+          {parsedEq && !parsedEq.isValid && !productPrediction && !compoundAssembly && (
             <div className="parse-error-box">
               <p className="error-message">{parsedEq.error}</p>
             </div>
@@ -401,15 +392,17 @@ export const SimulatorPage: React.FC = () => {
           {/* Barra de Ações do Simulador */}
           <div className="editor-actions-bar">
             <button
-              onClick={handleAutoBalance}
+              onClick={productPrediction ? handleApplyProductPrediction : compoundAssembly ? handleApplyCompoundAssembly : handleAutoBalance}
               className="btn btn-primary"
-              disabled={!parsedEq?.isValid}
+              disabled={!parsedEq?.isValid && !productPrediction && !compoundAssembly}
               title="Balancear equação automaticamente pelo método algébrico de frações exatas"
             >
               <Scale size={18} />
-              <span>Balancear equação</span>
+              <span>{productPrediction ? 'Completar e balancear' : compoundAssembly ? 'Montar fórmula' : 'Balancear'}</span>
             </button>
 
+            {parsedEq?.isValid && <a className="visual-jump" href="#reaction-visual">Ver átomos <ChevronRight size={15} aria-hidden="true" /></a>}
+            <details className="editor-tools"><summary>Ferramentas</summary><div className="editor-tools-grid">
             <button
               onClick={() => setShowVisualBuilder(!showVisualBuilder)}
               className={`btn ${showVisualBuilder ? 'btn-primary' : 'btn-secondary'}`}
@@ -485,6 +478,11 @@ export const SimulatorPage: React.FC = () => {
               <Trash2 size={18} />
               <span>Limpar</span>
             </button>
+          <details className="lab-help">
+            <summary>Como usar</summary>
+            <p id="equation-help">Digite uma fórmula ou nome e escolha a sugestão. Use + para adicionar e → para separar os lados.</p>
+          </details>
+            </div></details>
           </div>
         </section>
 
@@ -586,9 +584,9 @@ export const SimulatorPage: React.FC = () => {
         {parsedEq && parsedEq.isValid && (
           <section className="reaction-display-card card">
             <div className="reaction-display-header">
-              <h2 className="section-title">O equilíbrio da reação</h2>
+              <h2 className="section-title">{formalAssembly ? 'Montagem formal' : 'Resultado'}</h2>
               {molecularBalance && (
-                <span className="badge badge-success"><CheckCircle size={15} aria-hidden="true" /> Equilibrada</span>
+                <span className="badge badge-success"><CheckCircle size={15} aria-hidden="true" /> Átomos conservados</span>
               )}
             </div>
 
@@ -629,8 +627,15 @@ export const SimulatorPage: React.FC = () => {
               </div>
             </div>
 
+            <ReactionParticles
+              reactants={displayedEquation?.reactants ?? parsedEq.reactants}
+              products={displayedEquation?.products ?? parsedEq.products}
+              originalReactants={parsedEq.reactants}
+              originalProducts={parsedEq.products}
+            />
+
             {/* Classificação da Reação */}
-            {classification && (
+            {classification && !formalAssembly && (
               <details className="classification-block">
                 <summary>Entender esta reação</summary>
                 <ReactionBadges
@@ -639,13 +644,54 @@ export const SimulatorPage: React.FC = () => {
                 />
               </details>
             )}
-            <p className="reaction-note">Os átomos se reorganizam.<br />A matéria se conserva.</p>
+
           </section>
         )}
         {(!parsedEq || !parsedEq.isValid) && (
-          <section className="reaction-display-card reaction-empty" aria-label="Resultado da reação">
-            <h2>Qual será a próxima reação?</h2>
-            <p>Escolha um exemplo ou digite uma equação. O resultado aparece aqui.</p>
+          <section className={`reaction-display-card ${completionPreview ? 'reaction-pending' : 'reaction-empty'}`} aria-label="Resultado da reação">
+            {completionPreview ? (
+              <>
+                <h2 className="section-title">{compoundAssembly ? 'Montagem formal' : 'Produtos sugeridos'}</h2>
+          {productPrediction && (
+            <aside className="product-prediction" aria-live="polite">
+              <div className="prediction-copy">
+                <div className="prediction-formulas" aria-label={`Produtos previstos: ${productPrediction.products.join(' mais ')}`}>
+                  {productPrediction.products.map((product, index) => (
+                    <React.Fragment key={product}>
+                      {index > 0 && <span className="prediction-plus">+</span>}
+                      <FormulaDisplay formula={product} showTooltip={false} />
+                    </React.Fragment>
+                  ))}
+                </div>
+                <details className="lab-help prediction-details">
+                  <summary>Condições e explicação</summary>
+                  <span className="prediction-method">{productPrediction.reactionType} · {productPrediction.confidence === 'high' ? 'Biblioteca didática' : 'Regra química'}</span>
+                  <p>{productPrediction.explanation}</p>
+                  <p className="prediction-assumptions">{productPrediction.assumptions.join(' ')}</p>
+                </details>
+              </div>
+
+            </aside>
+          )}
+
+          {compoundAssembly && (
+            <aside className="product-prediction composition-suggestion" aria-live="polite">
+              <div className="prediction-copy">
+                <div className="prediction-formulas"><FormulaDisplay formula={compoundAssembly.formula} showTooltip={false} /></div>
+                <p>{compoundAssembly.name}</p>
+                <p className="composition-boundary">Só montagem de fórmula; não confirma reação.</p>
+                <details className="lab-help prediction-details"><summary>Por quê?</summary><p>{compoundAssembly.explanation}</p></details>
+              </div>
+
+            </aside>
+          )}
+
+
+                <ReactionParticles reactants={completionPreview.reactants} products={completionPreview.products} originalReactants={completionPreview.reactants} originalProducts={completionPreview.products} />
+              </>
+            ) : (
+              <><h2>Resultado</h2><p>Digite uma equação ou escolha um exemplo.</p></>
+            )}
           </section>
         )}
       </div>
@@ -694,15 +740,18 @@ export const SimulatorPage: React.FC = () => {
             {activeTab === 'details' && (
               <div className="tab-panel">
                 {balanceResult?.atomTable && (
+                  <details className="lab-disclosure"><summary>Contagem detalhada</summary>
                   <AtomCounterTable
                     table={balanceResult.atomTable}
                     isBalanced={molecularBalance}
                     reactants={displayedEquation?.reactants ?? parsedEq.reactants}
                     products={displayedEquation?.products ?? parsedEq.products}
                   />
+                  </details>
                 )}
 
-                {classification && balanceResult && (
+                {classification && balanceResult && !formalAssembly && (
+                  <details className="lab-disclosure"><summary>Explicação da reação</summary>
                   <section className="explanation-section card">
                     <div className="explanation-header">
                       <h3>O que acontece nesta reação</h3>
@@ -718,8 +767,10 @@ export const SimulatorPage: React.FC = () => {
                       <p className="explanation-subtext">{balanceResult.explanation}</p>
                     )}
                   </section>
+                  </details>
                 )}
 
+                <details className="lab-disclosure"><summary>Substâncias <span>{(displayedEquation?.reactants.length ?? 0) + (displayedEquation?.products.length ?? 0)}</span></summary>
                 <section className="participants-catalog-section">
                   <h3 className="section-heading">Substâncias da reação</h3>
                   <div className="substances-grid">
@@ -745,6 +796,7 @@ export const SimulatorPage: React.FC = () => {
                     ))}
                   </div>
                 </section>
+                </details>
               </div>
             )}
 
@@ -841,7 +893,7 @@ export const SimulatorPage: React.FC = () => {
                         <div className="history-item-info">
                           <span className="history-equation-text">{item.inputEquation}</span>
                           {item.balancedEquation !== item.inputEquation && (
-                            <span className="history-balanced-text">➔ {item.balancedEquation}</span>
+                            <span className="history-balanced-text">→ {item.balancedEquation}</span>
                           )}
                           <span className="history-date">
                             {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
