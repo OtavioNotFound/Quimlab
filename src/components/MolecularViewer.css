@@ -152,6 +152,7 @@
 .molecules-copies-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 0.85rem;
 }
 
@@ -163,6 +164,75 @@
   position: relative;
   min-height: 44px;
   min-width: 44px;
+}
+
+.molecule-unit {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  width: 112px;
+  min-height: 100px;
+}
+
+.molecule-diagram {
+  display: block;
+  width: 112px;
+  height: 88px;
+  overflow: visible;
+}
+
+.molecule-bonds line {
+  stroke: var(--text-primary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.molecule-atom circle {
+  stroke-width: 1.25px;
+}
+
+.molecule-atom text {
+  fill: currentColor;
+  font-family: var(--font-sans);
+  font-size: 7px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.molecule-composition {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 72px;
+}
+
+.composition-atom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 5px;
+  border: 1.25px solid;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.composition-atom small {
+  font-size: 0.56rem;
+}
+
+.molecule-structure-note {
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  line-height: 1.2;
+  text-align: center;
 }
 
 /* Esfera 3D do Átomo */

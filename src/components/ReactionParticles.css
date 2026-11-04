@@ -40,8 +40,8 @@
 .particle-motion-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 12px; color: var(--text-muted); }
 .particle-motion-bar button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 12px; }
 .particle-motion-bar button:hover { background: var(--bg-tertiary); }
-.moving-atom { transform-box: fill-box; transform-origin: center; transition: opacity 180ms ease; }
-.moving-atom.atom-dimmed { opacity: 0.18; }
+.molecule-atom { transition: opacity 180ms ease; }
+.molecule-atom.atom-dimmed { opacity: 0.18; }
 .particle-conservation .comparison-identity { min-height: 32px; padding: 3px 0; text-align: left; border-radius: 4px; color: inherit; }
 .particle-conservation .comparison-identity:hover, .particle-conservation .comparison-identity[aria-pressed='true'] { text-decoration: underline; text-underline-offset: 4px; }
 @media (prefers-reduced-motion: no-preference) {
@@ -50,12 +50,12 @@
     35% { transform: translate(3px, -4px) rotate(3deg); }
     70% { transform: translate(-3px, -1px) rotate(-1deg); }
   }
-  .moving-atom { animation: atom-drift var(--atom-duration, 4s) ease-in-out var(--atom-delay, 0s) infinite; }
-  .reaction-particles[data-paused='true'] .moving-atom { animation-play-state: paused; }
+  .moving-molecule { animation: atom-drift 4s ease-in-out infinite; }
+  .reaction-particles[data-paused='true'] .moving-molecule { animation-play-state: paused; }
 }
 @media (prefers-reduced-motion: reduce) {
   .particle-motion-bar { display: none; }
-  .moving-atom { animation: none; transition: none; }
+  .moving-molecule { animation: none; }
 }
 @media (max-width: 600px) {
   .particle-motion-bar button, .particle-conservation .comparison-identity { min-height: 44px; }
