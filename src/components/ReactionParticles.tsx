@@ -1,9 +1,9 @@
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 import type { SubstanceParticipant } from '../chemistry/types';
 import { getElement } from '../chemistry/periodicTable';
 import { formatFormulaDisplay } from '../chemistry/formulaParser';
 import { ArrowRight, Equal, MoveRight, Pause, Play } from 'lucide-react';
-import { CPK_COLORS } from './MolecularViewer';
+import { CPK_COLORS, MolecularUnit } from './MolecularViewer';
 import './ReactionParticles.css';
 
 interface Props {
@@ -13,38 +13,15 @@ interface Props {
   originalProducts: SubstanceParticipant[];
 }
 
-/** A bounded composition diagram, not a prediction of bonds or molecular geometry. */
+/** Shows known molecular structures with bonds; unknown formulas remain composition-only. */
 function ParticleGroup({ participant, highlighted }: { participant: SubstanceParticipant; highlighted: string | null }) {
   const elements = Object.entries(participant.parsed.elements);
   const total = elements.reduce((sum, [, count]) => sum + count, 0);
-  const atoms: string[] = [];
-  for (const [symbol, count] of elements) {
-    const visibleCount = Math.min(count, 12 - atoms.length);
-    for (let index = 0; index < visibleCount; index++) atoms.push(symbol);
-    if (atoms.length === 12) break;
-  }
-  const columns = Math.min(4, Math.ceil(Math.sqrt(atoms.length)));
-  const rows = Math.ceil(atoms.length / columns);
   return (
     <div className="particle-compound">
-      <svg viewBox="0 0 160 116" role="img" aria-label={`${participant.coefficient} × ${participant.formula}. Composição: ${elements.map(([el, count]) => `${count} ${el}`).join(', ')} por unidade.`}>
-        {atoms.map((symbol, index) => {
-          const color = CPK_COLORS[symbol] || CPK_COLORS.default;
-          const row = Math.floor(index / columns);
-          const rowLength = Math.min(columns, atoms.length - row * columns);
-          const x = 80 + ((index % columns) - (rowLength - 1) / 2) * 34;
-          const y = 58 + (row - (rows - 1) / 2) * 32;
-          return (
-            <g key={`${symbol}-${index}`} className={`moving-atom ${highlighted && highlighted !== symbol ? 'atom-dimmed' : ''}`}
-              style={{ '--atom-delay': `${index * -0.67}s`, '--atom-duration': `${3.2 + index % 3 * 0.7}s` } as CSSProperties}>
-              <circle cx={x} cy={y} r={18} fill={color.bg} stroke={color.border} strokeWidth="1.5" />
-              <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fill={color.text} fontSize="13" fontWeight="600">{symbol}</text>
-            </g>
-          );
-        })}
-      </svg>
+      <MolecularUnit formula={participant.parsed.cleanFormula} title={participant.formula} elements={participant.parsed.elements} animated highlighted={highlighted} />
       <div className="particle-formula"><span>{participant.coefficient} ×</span> {formatFormulaDisplay(participant.formula)}</div>
-      {total > atoms.length && <small>+{total - atoms.length} átomos por unidade</small>}
+      {total > 12 && <small>{total} átomos por unidade</small>}
     </div>
   );
 }
@@ -124,7 +101,7 @@ export function ReactionParticles({ reactants, products, originalReactants, orig
 
       </div>
       <details className="lab-help particle-guide"><summary>Sobre o modelo</summary>
-      <p className="particle-caption">Uma unidade por substância; o multiplicador indica a proporção. Sem representar ligações ou geometria.</p>
+      <p className="particle-caption">Estruturas conhecidas mostram ligações; fórmulas sem estrutura definida mostram apenas a composição.</p>
         <p className="comparison-key">Átomos nos reagentes / produtos. Toque no elemento para destacá-lo.</p>
       </details>
     </section>

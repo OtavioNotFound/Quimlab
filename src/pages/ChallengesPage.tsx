@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { balanceEquation, parseEquation } from '../chemistry';
+import { PRESET_REACTIONS } from '../chemistry/presetReactions';
 import { CheckCircle2, AlertTriangle, Lightbulb, ArrowRight } from 'lucide-react';
 import './ChallengesPage.css';
 
@@ -56,14 +57,56 @@ const CHALLENGES: ChallengeItem[] = [
   }
 ];
 
+const INFINITE_CHALLENGES = buildInfiniteChallenges();
+
+function buildInfiniteChallenges(): ChallengeItem[] {
+  const knownEquations = new Set(CHALLENGES.map(item => item.equation.replace(/\s+/g, '').toLowerCase()));
+  const additions = PRESET_REACTIONS.flatMap((preset, index) => {
+    const equation = preset.unbalanced.replace(/\s+/g, '').toLowerCase();
+    if (knownEquations.has(equation)) return [];
+
+    const parsed = parseEquation(preset.unbalanced);
+    const balanced = balanceEquation(parsed);
+    const coefficients = [...(balanced.reactantsCoefficients ?? []), ...(balanced.productsCoefficients ?? [])];
+    if (!parsed.isValid || !balanced.success || coefficients.every(value => value === 1)) return [];
+
+    knownEquations.add(equation);
+    const level = preset.id === 'cellular-respiration' ? 'Avançado'
+      : ['synthesis-salt', 'decomp-peroxide'].includes(preset.id) ? 'Iniciante' : 'Intermediário';
+    return [{
+      id: CHALLENGES.length + index + 1,
+      equation: preset.unbalanced,
+      level,
+      tip: preset.didacticTips,
+      explanation: preset.description
+    } satisfies ChallengeItem];
+  });
+
+  return [...CHALLENGES, ...additions];
+}
+
+const STARTING_TIME = 45;
+const MAX_TIME = 60;
+const TIME_BONUS = 2;
+const WRONG_ANSWER_PENALTY = 5;
+
 export const ChallengesPage: React.FC = () => {
+  const [mode, setMode] = useState<'classic' | 'infinite'>('classic');
+  const [infiniteStatus, setInfiniteStatus] = useState<'ready' | 'playing' | 'finished'>('ready');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [infiniteScore, setInfiniteScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [round, setRound] = useState(1);
   const [completedChallenges, setCompletedChallenges] = useState<Set<number>>(() => new Set());
   const [showTip, setShowTip] = useState(false);
   const [feedback, setFeedback] = useState<'success' | 'already-scored' | 'error' | null>(null);
+  const nextChallengeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const challenge = CHALLENGES[currentIndex];
+  const challengePool = mode === 'infinite' ? INFINITE_CHALLENGES : CHALLENGES;
+  const challenge = challengePool[currentIndex];
   const parsed = parseEquation(challenge.equation);
   const balancedTarget = balanceEquation(parsed);
 
@@ -71,6 +114,38 @@ export const ChallengesPage: React.FC = () => {
     reactants: parsed.reactants.map(() => 1),
     products: parsed.products.map(() => 1)
   }));
+
+  useEffect(() => {
+    if (mode !== 'infinite' || infiniteStatus !== 'playing') return;
+    const timer = window.setInterval(() => setTimeLeft(value => Math.max(0, value - 1)), 1000);
+    return () => window.clearInterval(timer);
+  }, [mode, infiniteStatus]);
+
+  useEffect(() => {
+    if (mode === 'infinite' && infiniteStatus === 'playing' && timeLeft === 0) {
+      setInfiniteStatus('finished');
+      if (nextChallengeTimer.current) window.clearTimeout(nextChallengeTimer.current);
+    }
+  }, [infiniteStatus, mode, timeLeft]);
+
+  const resetCoefficients = (index: number, pool = challengePool) => {
+    const next = parseEquation(pool[index].equation);
+    setCoeffs({ reactants: next.reactants.map(() => 1), products: next.products.map(() => 1) });
+    setShowTip(false);
+    setFeedback(null);
+  };
+
+  const startInfinite = () => {
+    if (nextChallengeTimer.current) window.clearTimeout(nextChallengeTimer.current);
+    setCurrentIndex(0);
+    resetCoefficients(0);
+    setInfiniteScore(0);
+    setTimeLeft(STARTING_TIME);
+    setStreak(0);
+    setBestStreak(0);
+    setRound(1);
+    setInfiniteStatus('playing');
+  };
 
   const handleCoeffChange = (side: 'reactants' | 'products', idx: number, delta: number) => {
     setCoeffs(prev => {
@@ -91,6 +166,29 @@ export const ChallengesPage: React.FC = () => {
       pExpected.every((v, i) => v === coeffs.products[i]);
 
     if (isCorrect) {
+      if (mode === 'infinite') {
+        if (infiniteStatus !== 'playing' || feedback === 'success') return;
+        setFeedback('success');
+        setInfiniteScore(total => total + 10 + Math.min(streak, 5));
+        setStreak(value => value + 1);
+        setBestStreak(value => Math.max(value, streak + 1));
+        setTimeLeft(value => Math.min(MAX_TIME, value + TIME_BONUS));
+
+        nextChallengeTimer.current = window.setTimeout(() => {
+          const nextRound = round + 1;
+          const maxLevel = nextRound < 4 ? 0 : nextRound < 9 ? 1 : 2;
+          const candidates = challengePool.filter(item => ['Iniciante', 'Intermediário', 'Avançado'].indexOf(item.level) <= maxLevel);
+          const withoutRepeat = candidates.filter(item => item.id !== challenge.id);
+          const pool = withoutRepeat.length ? withoutRepeat : candidates;
+          const next = pool[Math.floor(Math.random() * pool.length)];
+          const nextIndex = challengePool.findIndex(item => item.id === next.id);
+          setCurrentIndex(nextIndex);
+          resetCoefficients(nextIndex);
+          setRound(nextRound);
+        }, 650);
+        return;
+      }
+
       const alreadyCompleted = completedChallenges.has(challenge.id);
       setFeedback(alreadyCompleted ? 'already-scored' : 'success');
 
@@ -99,6 +197,10 @@ export const ChallengesPage: React.FC = () => {
         setScore(total => total + 10);
       }
     } else {
+      if (mode === 'infinite' && infiniteStatus === 'playing') {
+        setStreak(0);
+        setTimeLeft(value => Math.max(0, value - WRONG_ANSWER_PENALTY));
+      }
       setFeedback('error');
     }
   };
@@ -106,14 +208,7 @@ export const ChallengesPage: React.FC = () => {
   const handleNext = () => {
     const nextIdx = (currentIndex + 1) % CHALLENGES.length;
     setCurrentIndex(nextIdx);
-    const nextChallenge = CHALLENGES[nextIdx];
-    const nextParsed = parseEquation(nextChallenge.equation);
-    setCoeffs({
-      reactants: nextParsed.reactants.map(() => 1),
-      products: nextParsed.products.map(() => 1)
-    });
-    setShowTip(false);
-    setFeedback(null);
+    resetCoefficients(nextIdx);
   };
 
   return (
@@ -126,26 +221,57 @@ export const ChallengesPage: React.FC = () => {
           <p className="challenges-subtitle">
             Ajuste os coeficientes até a contagem de átomos fechar nos dois lados.
           </p>
-          <p className="challenge-score">
-            <span>Pontuação desta sessão</span>
-            <strong>{score}</strong>
-          </p>
+          {mode === 'classic' && <p className="challenge-score">
+            <span>Pontuação desta sessão</span><strong>{score}</strong>
+          </p>}
         </div>
       </header>
 
-      <div className="challenge-sheet">
+      <div className="challenge-mode-switch" role="group" aria-label="Modo do desafio">
+        <button type="button" className={mode === 'classic' ? 'active' : ''} aria-pressed={mode === 'classic'} onClick={() => {
+          if (nextChallengeTimer.current) window.clearTimeout(nextChallengeTimer.current);
+          setMode('classic'); setInfiniteStatus('ready'); setCurrentIndex(0); resetCoefficients(0, CHALLENGES);
+        }}>Clássico</button>
+        <button type="button" className={mode === 'infinite' ? 'active' : ''} aria-pressed={mode === 'infinite'} onClick={() => {
+          if (nextChallengeTimer.current) window.clearTimeout(nextChallengeTimer.current);
+          setMode('infinite'); setInfiniteStatus('ready');
+        }}>Infinito</button>
+      </div>
+
+      {mode === 'infinite' && infiniteStatus === 'ready' && <section className="challenge-sheet infinite-intro">
+        <span className="challenge-context">45 segundos iniciais · até 60</span>
+        <h2>Quantas reações você consegue equilibrar?</h2>
+        <p>Acertos dão 2 segundos e aumentam seu combo. Erros tiram 5 segundos; a dificuldade cresce conforme você avança.</p>
+        <button type="button" className="btn btn-primary" onClick={startInfinite}>Começar</button>
+      </section>}
+
+      {mode === 'infinite' && infiniteStatus === 'finished' && <section className="challenge-sheet infinite-finished" aria-live="polite">
+        <span className="challenge-context">Fim de jogo · {round - 1} reações</span>
+        <h2>{infiniteScore} pontos</h2>
+        <p>Maior combo: {bestStreak} acertos.</p>
+        <button type="button" className="btn btn-primary" onClick={startInfinite}>Jogar de novo</button>
+      </section>}
+
+      {(mode === 'classic' || infiniteStatus === 'playing') && <div className={`challenge-sheet ${mode === 'infinite' ? 'infinite-live' : ''}`}>
         <div className="challenge-card-header">
           <div className="challenge-meta">
-            <span className="challenge-step">Desafio {currentIndex + 1} de {CHALLENGES.length}</span>
+            {mode === 'classic' ? <span className="challenge-step">Desafio {currentIndex + 1} de {CHALLENGES.length}</span> : <>
+              <span className="challenge-step">Rodada {round}</span><span className="infinite-score">{infiniteScore} pts</span><span className="infinite-streak">Combo ×{streak}</span>
+            </>}
             <span className="challenge-level">
               {challenge.level}
             </span>
           </div>
-          <button onClick={() => setShowTip(!showTip)} className="btn btn-secondary tip-btn">
+          {mode === 'classic' && <button onClick={() => setShowTip(!showTip)} className="btn btn-secondary tip-btn">
             <Lightbulb size={16} />
             <span>{showTip ? 'Ocultar Dica' : 'Pedir Dica'}</span>
-          </button>
+          </button>}
         </div>
+
+        {mode === 'infinite' && <div className="infinite-clock" aria-label={`${timeLeft} segundos restantes`}>
+          <div className="infinite-clock-label"><span>Tempo</span><strong>{`${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`}</strong></div> {/* taste-skill-ignore: formato de relógio */}
+          <div className="infinite-clock-track"><span style={{ transform: `scaleX(${timeLeft / MAX_TIME})` }} /></div>
+        </div>}
 
         {showTip && (
           <div className="tip-alert-box">
@@ -217,17 +343,17 @@ export const ChallengesPage: React.FC = () => {
         )}
 
         <div className="challenge-actions-bar">
-          <button onClick={handleVerify} className="btn btn-primary">
+          <button onClick={handleVerify} className="btn btn-primary" disabled={mode === 'infinite' && (infiniteStatus !== 'playing' || feedback === 'success')}>
             <CheckCircle2 size={18} />
             <span>Verificar Resposta</span>
           </button>
 
-          <button onClick={handleNext} className="btn btn-secondary">
+          {mode === 'classic' && <button onClick={handleNext} className="btn btn-secondary">
             <span>Próximo Desafio</span>
             <ArrowRight size={18} />
-          </button>
+          </button>}
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
